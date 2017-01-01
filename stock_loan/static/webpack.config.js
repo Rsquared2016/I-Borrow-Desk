@@ -17,7 +17,7 @@ module.exports = {
       loader: 'style-loader!css-loader'
     }, {
       test: /\.js$/,
-      loaders: ['babel'],
+      loaders: ['babel-loader'],
       exclude: [node_modules_dir],
       include: path.join(__dirname, 'src')
     }]

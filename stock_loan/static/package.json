@@ -13,9 +13,8 @@
   "license": "cameron mochrie",
   "devDependencies": {
     "axios": "^0.9.0",
-    "babel": "^6.3.26",
-    "babel-core": "^6.5.1",
-    "babel-loader": "^6.2.2",
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
     "babel-preset-stage-1": "^6.3.13",
@@ -37,7 +36,7 @@
     "redux-simple-router": "^2.0.4",
     "redux-thunk": "^1.0.3",
     "style-loader": "^0.13.0",
-    "webpack": "^2.0.7-beta"
+    "webpack": "^2.2.0-rc.3"
   },
   "dependencies": {}
 }

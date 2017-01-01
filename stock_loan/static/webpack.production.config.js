@@ -9,7 +9,6 @@ module.exports = {
     filename: 'bundle.min.js'
   },
   plugins: [
-    new webpack.optimize.DedupePlugin(),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
@@ -31,10 +30,10 @@ module.exports = {
   module: {
     loaders: [{
       test: /\.css$/,
-      loaders: ['style', 'css']
+      loaders: ['style-loader', 'css-loader']
     }, {
       test: /\.js$/,
-      loaders: ['babel'],
+      loaders: ['babel-loader'],
       exclude: [node_modules_dir],
       include: path.join(__dirname, 'src')
     }]
