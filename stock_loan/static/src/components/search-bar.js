@@ -41,7 +41,7 @@ class SearchBar extends Component {
         suggest={true}
         valueField='symbol'
         textField='name'
-        placeholder="Search a ticker"
+        placeholder="Enter a ticker or search a company by name"
         value={this.state.ticker}
         onChange={this.onInputChange.bind(this)}
         onSelect={this.optionClicked.bind(this)}

@@ -3,10 +3,9 @@ import os
 import re
 from twython import TwythonStreamer
 from twython import Twython
-from borrow import Borrow
+from .borrow import Borrow
 
 dirname, file_name = os.path.split(os.path.abspath(__file__))
-
 # Grab Twitter  config
 parser = configparser.ConfigParser()
 parser.read(dirname + '/twitter_settings.cfg')
@@ -45,8 +44,9 @@ class BorrowStreamer(TwythonStreamer):
         print("There was an error")
 
     def _respond(self, data):
+        """Respond (or not) to a matched Tweet"""
 
-        #
+        # Instantiate a Rest instance
         twitter_rest = Twython(APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 
         # Grab the tweet's text and try to extract a symbol from it
@@ -61,7 +61,6 @@ class BorrowStreamer(TwythonStreamer):
             if summary != None:
                 for ticker in summary:
                     print(ticker.symbol)
-
                     #extract the relevant information from the
                     # summary report and build a status string
                     symbol = ticker.symbol
