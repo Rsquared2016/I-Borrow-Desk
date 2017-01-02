@@ -1,27 +1,26 @@
 import React, { Component } from 'react';
-import ReStock from 'react-stockcharts';
+import { ChartCanvas, Chart, EventCapture, series, axes, helper, coordinates, tooltip, scale } from 'react-stockcharts';
 import d3 from 'd3';
+import { timeFormat } from "d3-time-format";
 
-const { ChartCanvas, Chart, DataSeries, EventCapture } = ReStock;
-const { AreaSeries, HistogramSeries, LineSeries } = ReStock.series;
-const { XAxis, YAxis} = ReStock.axes;
-const { fitWidth, TypeChooser } = ReStock.helper;
-const { StockscaleTransformer } = ReStock.transforms;
-const { MouseCoordinates } = ReStock.coordinates;
-const { TooltipContainer, SingleValueTooltip } = ReStock.tooltip;
+const { BarSeries, LineSeries } = series;
+const { XAxis, YAxis} = axes;
+const { fitWidth } = helper;
+const { CrossHairCursor, MouseCoordinateX } = coordinates;
+const { SingleValueTooltip } = tooltip;
+const { discontinuousTimeScaleProvider } = scale;
 
 class StockChart extends Component {
   render() {
 
-    const { data, daily, width } = this.props;
+    const { data, daily, width, ratio } = this.props;
     const parseDate = daily
       ? d3.time.format("%Y-%m-%d").parse
       : d3.time.format("%Y-%m-%dT%H:%M:%S").parse;
 
-
     const parsedData = data.map(el => {
       let parsed = {};
-      parsed.fee = el.fee;
+      parsed.fee = el.fee !== -0.99 ? el.fee : null;
       parsed.available = el.available;
       parsed.date = new Date(parseDate(el.time).getTime());
       return parsed;
@@ -29,59 +28,59 @@ class StockChart extends Component {
 
     return (
       <ChartCanvas
-        width={width}
-        height={600}
+        ratio={ratio} width={width} height={600}
         margin={{left: 80, right: 50, top:60, bottom: 30}}
-        dataTransform={[ { transform: StockscaleTransformer } ]}
-        data={parsedData}
         type="hybrid"
+        data={parsedData}
+        xAccessor={d => d.date}
+        xScaleProvider={discontinuousTimeScaleProvider}
+        seriesName="Stock Chart"
+        xExtents={list => list.map(d => d.date)}
       >
-        <Chart id={1} xAccessor={ d => d.date }
-               yMousePointerDisplayLocation="right"
-               yMousePointerDisplayFormat={d3.format(".0%")}
+        <Chart
+          id={1}
+          yMousePointerDisplayLocation="right"
+          yMousePointerDisplayFormat={d3.format(".1%")}
+          yExtents={[d => 0, d => d.fee > 0 ? d.fee : 0]}
         >
-          <XAxis axisAt="bottom" orient="bottom"/>
+          <XAxis axisAt="bottom" orient="bottom" />
           <YAxis axisAt="right" orient="right" ticks={5} tickFormat={d3.format(".0%")}/>
-          <DataSeries id={0} yAccessor={d => d.fee }>
-            <LineSeries stroke="#FF2D04" />
-          </DataSeries>
-        </Chart>
-        <Chart id={2} xAccessor={ d => d.date }
-               yMousePointerDisplayLocation="left"
-               yMousePointerDisplayFormat={d3.format(",")}
-        >
-          <YAxis axisAt="left" orient="left" ticks={5}/>
-          <DataSeries id={0} yAccessor={d => d.available }>
-            <HistogramSeries />
-          </DataSeries>
-        </Chart>
-        <MouseCoordinates xDisplayFormat={d3.time.format("%Y-%m-%d")} type="crosshair" />
-        <EventCapture mouseMove={true} mainChart={1}/>
-        <TooltipContainer>
+          <LineSeries yAccessor={d => d.fee} stroke="#FF2D04" />
+          <MouseCoordinateX
+            at="bottom"
+            displayFormat={timeFormat("%Y-%m-%d")}/>
           <SingleValueTooltip
-            forChart={1}
-            forSeries={0}
+            yAccessor={d => d.fee}
+            xAccessor={d => d.date}
             yLabel="Fee"
             origin={[-80, -40]}
-            yDisplayFormat={d3.format(".0%")}
+            yDisplayFormat={d3.format(".1%")}
             fontSize={16}
             xLabel="Date"
-            xDisplayFormat={d3.time.format("%Y-%m-%d")}
+            xDisplayFormat={timeFormat("%Y-%m-%d")}
             labelStroke="#2C3E50"
           />
+        </Chart>
+        <Chart id={2}
+               yMousePointerDisplayLocation="left"
+               yMousePointerDisplayFormat={d3.format(",")}
+               yExtents={[d => 0, d => d.available]}
+        >
+          <YAxis axisAt="left" orient="left" ticks={5}/>
+          <BarSeries  yAccessor={d => d.available } />
           <SingleValueTooltip
-            forChart={2}
-            forSeries={0}
+            yAccessor={d => d.available}
+            xAccessor={d => d.date}
             yLabel="Available"
             xLabel="Date"
-            xDisplayFormat={d3.time.format("%Y-%m-%d")}
+            xDisplayFormat={timeFormat("%Y-%m-%d")}
             origin={[-80, -20]}
             yDisplayFormat={d3.format(",")}
             fontSize={16}
             labelStroke="#2C3E50"
           />
-        </TooltipContainer>
-
+        </Chart>
+        <CrossHairCursor />
       </ChartCanvas>
     );
   }

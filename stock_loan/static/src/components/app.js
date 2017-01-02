@@ -4,7 +4,8 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { logoutAction, showLoginAction, showPreferencesAction, clearMessage, fetchMostExpensive } from '../actions/index';
+import {logoutAction, showLoginAction, showPreferencesAction, clearMessage,
+fetchMostExpensive } from '../actions/index';
 import NavBar from './nav-bar';
 import Login from './login';
 import Preferences from './preferences';
@@ -81,13 +82,11 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
+const mapStateToProps = state => ({
     auth: state.auth,
     message: state.message,
     mostExpensive: state.mostExpensive
-  }
-};
+  });
 
 export default connect(mapStateToProps,
   { logoutAction, showLoginAction, showPreferencesAction, clearMessage, fetchMostExpensive })

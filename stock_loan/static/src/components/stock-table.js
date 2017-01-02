@@ -24,7 +24,7 @@ class StockTable extends Component {
         link={`/report/${stock.symbol}`}
         name={stock.name}
         symbol={stock.symbol}
-        available={stock.available}a
+        available={stock.available}
         fee={stock.fee}
         updated={stock.datetime.replace('GMT', '')}
         buttonType={buttonType}
@@ -38,7 +38,7 @@ class StockTable extends Component {
     return stocks.sort((a, b) => {
       let x = a[key];
       let y = b[key];
-      if (typeof x == "string") {
+      if (typeof x === "string") {
           x = x.toLowerCase();
           y = y.toLowerCase();
       }

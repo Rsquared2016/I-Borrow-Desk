@@ -13,7 +13,7 @@ class HistoricalReport extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params.ticker != this.props.params.ticker) {
+    if (nextProps.params.ticker !== this.props.params.ticker) {
       this.props.fetchStock(nextProps.params.ticker);
     }
   }
@@ -71,10 +71,7 @@ class HistoricalReport extends Component {
   }
 }
 
-const mapStateToProps = ({ stock, watchlist }) => {
-  return { stock, watchlist }
-};
+const mapStateToProps = ({ stock, watchlist }) => ({ stock, watchlist });
 
-export default connect(mapStateToProps,
-  { fetchStock, addWatchlist, removeWatchlist })
+export default connect(mapStateToProps, { fetchStock, addWatchlist, removeWatchlist })
 (HistoricalReport);

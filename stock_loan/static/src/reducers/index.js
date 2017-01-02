@@ -1,4 +1,4 @@
-import { UPDATE_LOCATION } from 'redux-simple-router';
+import { UPDATE_LOCATION } from 'react-router-redux';
 
 import {  FETCH_STOCK, UPDATE_COMPANY_SEARCH, RESET_COMPANY_SEARCH, FETCH_TRENDING}
   from '../actions/index';
@@ -8,7 +8,7 @@ import { REGISTER_SUCCESS, FETCH_PROFILE } from '../actions/index';
 import { FETCH_WATCHLIST, ADD_WATCHLIST, REMOVE_WATCHLIST } from '../actions/index';
 import { CLEAR_MESSAGE } from '../actions/index';
 import { UPDATE_FILTER, UPDATE_MOST_EXPENSIVE } from '../actions/index';
-import { CHANGE_EMAIL_SUCCESS } from '../actions/index';
+import { CHANGE_EMAIL_SUCCESS, CHANGE_PASSWORD_SUCCESS } from '../actions/index';
 
 export const StockReducer = (state={}, action) => {
   switch (action.type) {
@@ -68,8 +68,13 @@ export const AuthReducer =
 export const WatchlistReducer = (state=[], action) => {
   switch(action.type) {
     case FETCH_WATCHLIST:
-      if (action.payload.data.watchlist) return [...action.payload.data.watchlist];
-      else return state;
+      if (action.payload.data.watchlist) {
+        return [...action.payload.data.watchlist];
+      } else if (action.payload.data.hasOwnProperty('watchlist')) {
+        return [];
+      } else {
+        return state;
+      }
     default:
       return state
   }
@@ -87,6 +92,8 @@ export const MessageReducer = (state={text: '', type: ''}, action) => {
       return {text: `Removed ${action.payload} from your watchlist`, type: 'info' };
     case CHANGE_EMAIL_SUCCESS:
       return {text: 'Email successfully changed', type: 'success'};
+    case CHANGE_PASSWORD_SUCCESS:
+      return {text: 'Password successfully changed', type: 'success'};
     case CLEAR_MESSAGE:
       return {text: '', type: ''};
     default:

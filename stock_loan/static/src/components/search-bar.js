@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { routeActions } from 'redux-simple-router';
 import { Combobox } from 'react-widgets';
 import _ from 'lodash';
+import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { searchCompany, resetCompanySearch } from '../actions/index';
 
@@ -28,13 +28,12 @@ class SearchBar extends Component {
     const ticker = value.symbol;
     this.setState({ ticker: '' });
     this.props.resetCompanySearch();
-    this.props.routeActions.push(`/report/${ticker}`);
+    browserHistory.push(`/report/${ticker}`);
   }
 
   render() {
-    const companies = this.props.companySearch.map( el => {
-      return {'symbol': el.symbol, 'name': `${el.name} - ${el.symbol}`};
-    });
+    const companies = this.props.companySearch
+      .map(el => ({'symbol': el.symbol, 'name': `${el.name} - ${el.symbol}`}));
     return (
       <Combobox
         data={companies}
@@ -50,16 +49,12 @@ class SearchBar extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return { companySearch: state.companies }
-};
+const mapStateToProps = state => ({ companySearch: state.companies });
 
-const mapDispatchToProps = (dispatch) => {
-  return {
+const mapDispatchToProps = dispatch =>
+  ({
     searchCompany: bindActionCreators(searchCompany, dispatch),
     resetCompanySearch: bindActionCreators(resetCompanySearch, dispatch),
-    routeActions: bindActionCreators(routeActions, dispatch)
-  }
-};
+  });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);

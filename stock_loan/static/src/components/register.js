@@ -1,33 +1,54 @@
-import React, { Component, PropTypes } from 'react';
-import { Grid, Row, Col, ButtonInput, Input } from 'react-bootstrap';
-import { reduxForm } from 'redux-form';
+import React, {Component, PropTypes} from 'react';
+import {Grid, Row, Col, Button} from 'react-bootstrap';
+import {reduxForm, Field} from 'redux-form';
 
 import utils from '../utils';
-import { submitRegister } from '../actions/index';
+import {submitRegister} from '../actions/index';
 
 class Register extends Component {
 
   render() {
-    const {fields: {username, email, password, confirmPassword, receiveEmail},
-      resetForm, handleSubmit, error } = this.props;
+    const {handleSubmit} = this.props;
     return (
       <Grid>
         <Row>
           <Col xs={12} md={6} mdOffset={3}>
             <h4>Register to maintain a watchlist and receive morning updates!</h4>
             <form onSubmit={handleSubmit}>
-              {utils.renderField(username, 'Username')}
-              {utils.renderField(email, 'Email')}
-              {utils.renderField(password, 'Password', 'password')}
-              {utils.renderField(confirmPassword, 'Confirm Password', 'password')}
-              <Input
+              <Field
+                name="username"
+                component={utils.renderField}
+                type="text"
+                label="Username"
+              />
+              <Field
+                name="email"
+                type="email"
+                label="Email"
+                component={utils.renderField}
+              />
+              <Field
+                name="password"
+                type="password"
+                label="Password"
+                component={utils.renderField}
+              />
+              <Field
+                name="confirmPassword"
+                type="password"
+                label="Confirm Password"
+                component={utils.renderField}
+              />
+              <Field
+                name="receiveEmail"
                 type='checkbox'
                 label='Receive Morning Email'
-                defaultChecked
-                {...receiveEmail}
+                component={utils.renderCheckbox}
+                checked
               />
-              {error && <div>{error}</div>}
-              <ButtonInput type="submit" value="Register" />
+              <Button type="submit">
+                Register
+              </Button>
             </form>
           </Col>
         </Row>
@@ -36,7 +57,7 @@ class Register extends Component {
   }
 }
 
-const validate = ({ username, password, confirmPassword, email }) => {
+const validate = ({username, password, confirmPassword, email}) => {
   let errors = {};
   let emailRe = /\S+@\S+\.\S+/;
 
@@ -45,7 +66,7 @@ const validate = ({ username, password, confirmPassword, email }) => {
 
   if (!password) errors.password = 'Password required';
   else if (password.length < 6) errors.password = 'Password must be at least 6 characters.';
-  if (password != confirmPassword) errors.confirmPassword = 'Password must match';
+  if (password !== confirmPassword) errors.confirmPassword = 'Password must match';
 
   if (!email) errors.email = 'Email address required';
   else if (!email.match(emailRe)) errors.email = 'Invalid Email Address';
@@ -55,7 +76,6 @@ const validate = ({ username, password, confirmPassword, email }) => {
 
 export default reduxForm({
   form: 'RegisterForm',
-  fields: ['username', 'password', 'confirmPassword', 'email', 'receiveEmail'],
-  validate,
-  onSubmit: submitRegister
+  onSubmit: submitRegister,
+  validate
 })(Register);

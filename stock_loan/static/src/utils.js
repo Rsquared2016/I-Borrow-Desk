@@ -1,35 +1,33 @@
 import React from 'react';
-import { Input } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel, HelpBlock, Checkbox } from 'react-bootstrap';
 
 const utils = {
-  toPercentage: x => {
-    return `${((x) * 100).toFixed(1)} %`;
-  },
+  toPercentage: x => `${((x) * 100).toFixed(1)} %`,
 
-  toPercentageNoScale: x => {
-    return `${x.toFixed(1)}%`;
-  },
+  toPercentageNoScale: x => `${x.toFixed(1)}%`,
 
-  toCommas: x => {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  },
+  toCommas: x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
 
-  showWarning: (field) => {
-    if (field.touched && field.invalid) return 'has-danger';
-  },
-
-  renderField: (field, label, type='text') => {
-    return (
-      <Input
+  renderField: ({ input, label, type, meta: { touched, error, warning } }) =>
+    <FormGroup validationState={touched && error ? 'error' : 'success'}>
+      <ControlLabel>
+        {label}
+      </ControlLabel>
+      <FormControl
+        {...input}
         type={type}
-        label={label}
-        hasFeedback
-        bsStyle={field.touched && field.error ? 'error' : 'success'}
-        {...field}
-        help={field.touched && field.error ? field.error : ''}
       />
-    )
-  }
+      <HelpBlock>
+        {touched && error ? error : ''}
+      </HelpBlock>
+    </FormGroup>,
+
+  renderCheckbox: ({ input, label }) =>
+    <FormGroup>
+      <Checkbox {...input}>
+        {label}
+      </Checkbox>
+    </FormGroup>,
 };
 
 export default utils;

@@ -4,3 +4,5 @@
 /stock_loan/.idea
 /stock_loan/static/dist
 /stock_loan/static/node_modules
+/all_symbols_fee_over_0.xls
+/get_index.py

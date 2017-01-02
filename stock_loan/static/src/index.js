@@ -8,7 +8,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
-import { syncHistory, routeReducer } from 'redux-simple-router';
+import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
 import { Router, Route, browserHistory } from 'react-router';
 import { reducer as formReducer } from 'redux-form';
 
@@ -28,10 +28,8 @@ import {StockReducer, CompanySearchReducer, TrendingReducer, WatchlistReducer,
   from './reducers/index';
 
 
-
-const middleware = syncHistory(browserHistory);
 const reducer = combineReducers({
-  routing: routeReducer,
+  routing: routerReducer,
   stock: StockReducer,
   companies: CompanySearchReducer,
   trending: TrendingReducer,
@@ -47,12 +45,12 @@ const store = createStore(
   reducer,
   (sessionStorage.token) ? { auth: {authenticated: true, showLogin: false }} : {},
   compose(
-    applyMiddleware(thunk, middleware),
+    applyMiddleware(thunk),
     window.devToolsExtension ? window.devToolsExtension() : f => f
   )
 );
+const history = syncHistoryWithStore(browserHistory, store);
 
-middleware.listenForReplays(store);
 
 if (store.getState().auth.authenticated) {
   store.dispatch(fetchProfile());
@@ -62,7 +60,7 @@ if (store.getState().auth.authenticated) {
 ReactDOM.render(
   <Provider store={store}>
     <div>
-      <Router history={browserHistory}>
+      <Router history={history}>
         <Route path='/' component={App}>
           <Route path='report/:ticker' component={HistoricalReport} />
           <Route path='trending' component={Trending} />

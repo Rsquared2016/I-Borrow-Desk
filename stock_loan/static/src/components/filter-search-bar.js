@@ -1,70 +1,107 @@
 import React, { Component, PropTypes } from 'react';
-import { Grid, Row, Col, ButtonInput, Input } from 'react-bootstrap';
-import { reduxForm } from 'redux-form';
+import { Grid, Row, Col, Button, Input, FormGroup, ButtonToolbar, ControlLabel } from 'react-bootstrap';
+import { reduxForm, Field } from 'redux-form';
 
 import { submitFilter } from '../actions/index';
+import utils from '../utils';
 
 const COUNTRIES = ['USA', 'Canada', 'Australia', 'Austria', 'Belgium', 'British', 'Dutch',
   'France', 'Germany', 'HongKong', 'India', 'Italy', 'Japan', 'Mexico', 'Spain',
   'Swedish', 'Swiss'];
 const ORDER_OPTIONS = ['fee', 'available'];
 
-const INITIAL_VALUES = {min_available: 0, max_available: 100000,
-  min_fee: 0, max_fee: 100, country: 'USA', order_by: 'fee'};
+const INITIAL_VALUES = {
+  min_available: 0,
+  max_available: 100000,
+  min_fee: 0,
+  max_fee: 100,
+  country: 'USA',
+  order_by: 'fee'
+};
 
-class Filter extends Component {
+const filter = props => {
+  const {reset, handleSubmit } = props;
+  return (
+    <Grid>
+      <form onSubmit={handleSubmit}>
+        <Row>
+          <Col xs={12} md={4}>
+            <Field
+              name="min_available"
+              type="number"
+              label="Minimum Available"
+              component={utils.renderField}
+            />
+            <Field
+              name="min_fee"
+              type="number"
+              label="Minimum Fee (%)"
+              component={utils.renderField}
+            />
+          </Col>
+          <Col xs={12} md={4}>
+            <Field
+              name="max_available"
+              type="number"
+              label="Maximum Available"
+              component={utils.renderField}
+            />
+            <Field
+              name="max_fee"
+              type="number"
+              label="Maximum Fee (%)"
+              component={utils.renderField}
+            />
+          </Col>
+          <Col xs={12} md={4}>
+            <FormGroup>
+              <ControlLabel>
+                Country
+              </ControlLabel>
+              <Field
+                name="country"
+                type="select"
+                component="select"
+                className="form-control">
+                {COUNTRIES.map(order =>
+                  (<option value={order} key={order}>
+                    {order}
+                  </option>))}
+              </Field>
+            </FormGroup>
+            <FormGroup>
+              <ControlLabel>
+                Order By
+              </ControlLabel>
+              <Field
+                name="order_by"
+                type="select"
+                component="select"
+                className="form-control">
+                {ORDER_OPTIONS.map(order =>
+                  (<option value={order} key={order}>
+                    {order}
+                  </option>))}
+              </Field>
+            </FormGroup>
+          </Col>
+        </Row>
+        <Row>
+        <ButtonToolbar>
+          <Button type="submit">
+            Submit
+          </Button>
+          <Button type="reset" bsStyle="danger" onClick={reset}>
+            Reset
+          </Button>
+        </ButtonToolbar>
+        </Row>
+      </form>
+    </Grid>
+  )
+};
 
-  renderField(field, label) {
-    return (
-      <Input
-        type='number'
-        label={label}
-        bsStyle={field.invalid ? 'error' : 'success'}
-        help={field.touched && field.invalid ? field.error : ''}
-        {...field}
-      />
-    )
-  }
 
-  render() {
-    const {fields: {min_available, max_available, min_fee, max_fee, country, order_by },
-      resetForm, handleSubmit } = this.props;
-
-    return (
-      <Grid>
-        <form onSubmit={handleSubmit}>
-          <Row>
-            <Col xs={12} md={4}>
-              {this.renderField(min_available, 'Minimum Available')}
-              {this.renderField(min_fee, 'Minimum Fee (%)')}
-            </Col>
-            <Col xs={12} md={4}>
-              {this.renderField(max_available, 'Maximum Available')}
-              {this.renderField(max_fee, 'Maximum Fee (%)')}
-            </Col>
-            <Col xs={12} md={4}>
-              <Input type="select" label="Country" {...country}>
-                {COUNTRIES.map(country => {
-                  return (<option value={country} key={country}>
-                    {country}
-                  </option>);})}
-              </Input>
-              <Input type="select" label="Order By" {...order_by}>
-                {ORDER_OPTIONS.map(order => {
-                return (<option value={order} key={order}>
-                  {order}
-                  </option>);})}
-              </Input>
-            </Col>
-          </Row>
-          <Row>
-            <ButtonInput type="submit" value="Submit" />
-          </Row>
-        </form>
-      </Grid>
-    )
-  }
-}
 
 const validate = ({ min_available, max_available, min_fee, max_fee }) => {
   let errors = {};
@@ -84,10 +121,11 @@ const validate = ({ min_available, max_available, min_fee, max_fee }) => {
   return errors;
 };
 
+
 export default reduxForm({
   form: 'FilterForm',
-  fields: ['min_available', 'max_available', 'min_fee', 'max_fee', 'country', 'order_by'],
   validate,
   destroyOnUnmount: false,
-  onSubmit: submitFilter
-}, state => ({ initialValues: INITIAL_VALUES}))(Filter);
+  onSubmit: submitFilter,
+  initialValues: INITIAL_VALUES
+})(filter);

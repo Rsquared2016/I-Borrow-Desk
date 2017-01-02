@@ -1,4 +1,7 @@
 import axios from 'axios';
+import { routerActions } from 'react-router-redux';
+import { SubmissionError } from 'redux-form';
+
 import { store }  from '../index';
 
 export const UPDATE_COMPANY_SEARCH = 'UPDATE_COMPANY_SEARCH';
@@ -23,8 +26,6 @@ export const CLEAR_MESSAGE = 'CLEAR_MESSAGE';
 export const UPDATE_FILTER = 'UPDATE_FILTER';
 export const UPDATE_MOST_EXPENSIVE = 'UPDATE_MOST_EXPENSIVE';
 
-import { routeActions } from 'redux-simple-router';
-
 export const searchCompany = name => {
   return dispatch => {
     return axios.get(`/api/search/${name}`)
@@ -35,13 +36,11 @@ export const searchCompany = name => {
 
 export const resetCompanySearch = () => { return {'type': RESET_COMPANY_SEARCH };};
 
-export const fetchStock = ticker => {
-  return dispatch => {
-    return axios.get(`/api/ticker/${ticker}`)
-      .then(response => dispatch({type: FETCH_STOCK, payload: response}))
-      .catch(err => console.log('error in fetchStock', err));
-  };
-};
+export const fetchStock = ticker =>
+  dispatch =>
+    axios.get(`/api/ticker/${ticker}`)
+      .then(response => dispatch({type: FETCH_STOCK, payload: response}));
+
 
 export const fetchTrending = () => {
   return dispatch => {
@@ -80,39 +79,35 @@ export const addWatchlist = symbol => {
   };
 };
 
-export const removeWatchlist = symbol => {
-  return (dispatch, getState) => {
-    return makeAuthRequest().delete(`/api/watchlist?symbol=${symbol}`)
+export const removeWatchlist = symbol =>
+  (dispatch, getState) =>
+    makeAuthRequest().delete(`/api/watchlist?symbol=${symbol}`)
       .then(response => {
         dispatch({type: REMOVE_WATCHLIST, payload: symbol});
         dispatch({type: FETCH_WATCHLIST, payload: response});
       })
       .catch(err => dispatch({type: SHOW_LOGIN, payload: err}));
-  };
-};
 
-export const showLoginAction = () => { return {'type': SHOW_LOGIN };};
-export const hideLoginAction = () => { return {'type': HIDE_LOGIN };};
 
-export const showPreferencesAction = () => { return {'type': SHOW_PREFERENCES };};
-export const hidePreferencesAction = () => { return {'type': HIDE_PREFERENCES };};
+export const showLoginAction = () => ({'type': SHOW_LOGIN });
+export const hideLoginAction = () => ({'type': HIDE_LOGIN });
 
-export const submitLogin = (values, dispatch) => {
-  return new Promise((resolve, reject) => {
-    axios.post('/api/auth', values)
-      .then(response => {
-        dispatch({type: LOGIN_SUCCESS, payload: response.data.access_token });
-        dispatch(fetchProfile());
-        dispatch(fetchWatchlist());
-        resolve();
-      })
-      .catch(error => {
-        console.log('error in submitLogin', error);
-        reject({username: 'Incorrect username or password',
-          password: 'Incorrect username or password'});
-      });
-  });
-};
+export const showPreferencesAction = () => ({'type': SHOW_PREFERENCES });
+export const hidePreferencesAction = () => ({'type': HIDE_PREFERENCES });
+
+export const submitLogin = (values, dispatch) =>
+  axios.post('/api/auth', values)
+    .then(response => {
+      dispatch({type: LOGIN_SUCCESS, payload: response.data.access_token });
+      dispatch(fetchProfile());
+      dispatch(fetchWatchlist());
+    })
+    .catch(error => {
+      throw new SubmissionError({
+        _error: 'Login Failed',
+        username: 'Incorrect username or password',
+        password: 'Incorrect username or password'});
+    });
 
 export const fetchProfile = () => {
   return (dispatch, getState) => {
@@ -126,80 +121,83 @@ export const fetchProfile = () => {
   };
 }
 
-export const toggleMorningEmail = () => {
-  return (dispatch) => {
-    return makeAuthRequest().post('/api/user/morning')
+export const toggleMorningEmail = () =>
+  dispatch =>
+    makeAuthRequest().post('/api/user/morning')
       .then(response => dispatch(fetchProfile()))
       .catch(err => console.log('error in toggle morning email'));
-  }
-}
 
-export const submitNewEmail = (values, dispatch) => {
-  return new Promise((resolve, reject) => {
-    makeAuthRequest().post(`/api/user/email`, values)
-      .then(response => {
-        dispatch({type: CHANGE_EMAIL_SUCCESS });
-        resolve();
-      })
-      .catch(error => {
-        console.log('error in changeEmail', error);
-        if (error.status == 401) reject({password: 'Password incorrect'});
-        reject({...error.data.errors});
-      });
-  });
-};
 
-export const submitNewPassword = (values, dispatch) => {
-  return new Promise((resolve, reject) => {
-    makeAuthRequest().post(`/api/user/password`, values)
-      .then(response => {
-        dispatch({type: CHANGE_PASSWORD_SUCCESS });
-        resolve();
-      })
-      .catch(error => {
-        console.log('error in changePassword', error);
-        if (error.status == 401) reject({password: 'Password incorrect'});
-        reject({...error.data.errors});
-      });
-  });
-};
+export const submitNewEmail = (values, dispatch) =>
+  makeAuthRequest().post(`/api/user/email`, values)
+    .then(response => {
+      dispatch({type: CHANGE_EMAIL_SUCCESS });
+      dispatch({type: HIDE_PREFERENCES });
+    })
+    .catch(error => {
+      if (error.response.status == 401) {
+        throw new SubmissionError({
+          _error: 'Password Incorrect Failed',
+          password: 'Password Incorrect'
+        });
+      } else {
+        console.log('Unhandled error', error);
+      }
+    })
 
-export const logoutAction = () => {return {type: LOGOUT_ACTION};};
+export const submitNewPassword = (values, dispatch) =>
+  makeAuthRequest().post(`/api/user/password`, values)
+    .then(response => {
+      dispatch({type: CHANGE_PASSWORD_SUCCESS });
+      dispatch({type: HIDE_PREFERENCES });
+    })
+    .catch(error => {
+      if (error.response.status == 401) {
+        throw new SubmissionError({
+          _error: 'Password Incorrect',
+          password: 'Password incorrect'
+        });
+      } else {
+        console.log('Unhandled error', error);
+      }
+    })
 
-export const submitRegister = (values, dispatch) => {
-  return new Promise((resolve, reject) => {
-    axios.post('/api/register', values)
-      .then(response => {
-        dispatch({type: REGISTER_SUCCESS, payload: response});
-        dispatch({type: SHOW_LOGIN});
-        resolve();
-      })
-      .catch(error => {
-        reject({...error.data.errors});
-      });
-  });
-};
 
-export const clearMessage = () => { return { 'type': CLEAR_MESSAGE };};
+export const logoutAction = () => ({type: LOGOUT_ACTION});
+
+
+export const submitRegister = (values, dispatch) =>
+  axios.post('/api/register', values)
+    .then(response => {
+      dispatch({type: REGISTER_SUCCESS, payload: response});
+      dispatch({type: SHOW_LOGIN});
+    })
+    .catch(error => {
+      throw new SubmissionError({
+        _error: 'Registration Failed',
+        ...error.response.data.errors});
+    });
+
+
+export const clearMessage = () => ({'type': CLEAR_MESSAGE});
+
 
 export const submitFilter = (values, dispatch) => {
-  return new Promise((resolve, reject) => {
-    axios.get('/api/filter', {params: values})
-      .then(response => {
-        dispatch({type: UPDATE_FILTER, payload: response});
-        resolve();
-      })
-      .catch(error => {
-        console.log('error in submitFilter', error);
-        reject({...error.data.errors});
+  return axios.get('/api/filter', {params: values})
+    .then(response => {
+      dispatch({type: UPDATE_FILTER, payload: response});
+    })
+    .catch(error => {
+      console.log('error in submitFilter', error);
+      throw new SubmissionError({
+        _error: 'Error in Filter Submission',
+        ...error.response.data.errors
       });
-  });
-};
+    });
+}
 
-export const fetchMostExpensive = () => {
-  return dispatch => {
-    return axios.get('/api/filter/most_expensive')
+export const fetchMostExpensive = () =>
+  dispatch =>
+    axios.get('/api/filter/most_expensive')
       .then(response => dispatch({type: UPDATE_MOST_EXPENSIVE, payload: response}))
       .catch(err => console.log(err));
-  };
-};

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import { ButtonInput, Alert } from 'react-bootstrap';
-import { reduxForm } from 'redux-form';
+import { Button } from 'react-bootstrap';
+import { reduxForm, Field } from 'redux-form';
 
 import utils from '../utils';
 import { submitNewEmail } from '../actions/index';
@@ -13,20 +13,27 @@ class ChangeEmail extends Component {
   }
 
   render() {
-    const { fields: { password, email }, handleSubmit } = this.props;
+    const { handleSubmit } = this.props;
     return (
       <div>
         <h4>Change Email Address</h4>
-        <form onSubmit={(data) => handleSubmit(data).then(
-        () => this.setState({message: 'Email successfully changed!'}), err => console.log(err))}>
-          {utils.renderField(password, 'Re-enter Password', 'password')}
-          {utils.renderField(email, 'New Email')}
-          <ButtonInput type="submit" value="Submit" />
+        <form onSubmit={handleSubmit}>
+          <Field
+            name="password"
+            component={utils.renderField}
+            type="password"
+            label="Re-enter Password"
+          />
+          <Field
+            name="email"
+            component={utils.renderField}
+            type="email"
+            label="New Email"
+          />
+          <Button type="submit">
+            Submit
+          </Button>
         </form>
-        {this.state.message &&
-        <Alert bsStyle="success" onDismiss={() => this.setState({message: ''})}>
-          {this.state.message}
-        </Alert>}
       </div>
     )
   }
@@ -45,8 +52,6 @@ function validate({ email, password }) {
 
 export default reduxForm({
   form: 'EmailForm',
-  fields: ['password', 'email'],
   validate,
-  onSubmit: submitNewEmail,
-  returnRejectedSubmitPromise : true
+  onSubmit: submitNewEmail
 })(ChangeEmail);

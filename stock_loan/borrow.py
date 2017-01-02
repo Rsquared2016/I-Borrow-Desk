@@ -464,7 +464,7 @@ class Borrow:
             return [Stock._make(row) for row in results]
 
         else:
-            return None
+            return []
 
     @timer
     def historical_report(self, symbol, real_time=False):

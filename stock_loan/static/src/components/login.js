@@ -1,30 +1,42 @@
-import React, { Component, PropTypes } from 'react';
-import { Modal, ButtonInput } from 'react-bootstrap';
-import { reduxForm } from 'redux-form';
+import React, {Component, PropTypes} from 'react';
+import {Modal, Button} from 'react-bootstrap';
+import {reduxForm, Field} from 'redux-form';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 import utils from '../utils';
-import { submitLogin, hideLoginAction } from '../actions/index';
+import {hideLoginAction, submitLogin} from '../actions/index';
 
-class Login extends Component {
+let Login = props => {
+  const { show, hideLoginAction, handleSubmit } = props;
+  return (
+    <Modal show={show} onHide={hideLoginAction}>
+      <Modal.Header closeButton>
+        <Modal.Title>Login</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <form onSubmit={handleSubmit}>
+          <Field
+            name="username"
+            component={utils.renderField}
+            type="text"
+            label="Username"
+          />
+          <Field
+            name="password"
+            component={utils.renderField}
+            type="password"
+            label="Password"
+          />
+          <Button type="submit">
+            Submit
+          </Button>
+        </form>
+      </Modal.Body>
+    </Modal>
+  )
+};
 
-  render() {
-    const { fields: { username, password }, handleSubmit } = this.props;
-    return (
-      <Modal show={this.props.show} onHide={this.props.hideLoginAction}>
-        <Modal.Header closeButton>
-          <Modal.Title>Login</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <form onSubmit={handleSubmit}>
-            {utils.renderField(username, 'Username')}
-            {utils.renderField(password, 'Password', 'password')}
-            <ButtonInput type="submit" value="Submit" />
-          </form>
-        </Modal.Body>
-      </Modal>
-    )
-  }
-}
 
 function validate(values) {
   let errors = {};
@@ -33,9 +45,16 @@ function validate(values) {
   return errors;
 }
 
-export default reduxForm({
+const mapDispatchToProps = dispatch => ({
+  hideLoginAction: bindActionCreators(hideLoginAction, dispatch)
+});
+
+Login = reduxForm({
   form: 'LoginForm',
-  fields: ['username', 'password'],
-  validate,
-  onSubmit: submitLogin
-}, null, { hideLoginAction })(Login);
+  onSubmit: submitLogin,
+  validate
+})(Login);
+
+Login = connect(null, mapDispatchToProps)(Login);
+//
+export default Login;

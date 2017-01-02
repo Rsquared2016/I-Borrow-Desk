@@ -4,7 +4,7 @@ var node_modules_dir = path.resolve(__dirname, 'node_modules');
 
 
 module.exports = {
-  devtool: 'cheap-eval-source-map',
+  devtool: 'source-map',
   entry: ['./src/index'],
   output: {
     path: path.join(__dirname, 'dist', 'js'),

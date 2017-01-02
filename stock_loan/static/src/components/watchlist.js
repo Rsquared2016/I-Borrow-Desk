@@ -1,6 +1,6 @@
 import React from 'react';
 import { Component } from 'react';
-import { Input } from 'react-bootstrap';
+import { FormGroup, Checkbox } from 'react-bootstrap';
 import { connect } from 'react-redux';
 
 import { fetchWatchlist, toggleMorningEmail } from '../actions/index';
@@ -17,24 +17,22 @@ class Watchlist extends Component {
     return (
       <div>
         <form>
-          <Input
-            type="checkbox"
-            label='Receive Morning email'
-            checked={this.props.auth.receiveEmail}
-            onChange={this.props.toggleMorningEmail}
-          />
+          <FormGroup>
+            <Checkbox
+              value={this.props.auth.receiveEmail}
+              onChange={this.props.toggleMorningEmail}>
+              Receive Morning email
+            </Checkbox>
+          </FormGroup>
         </form>
         <StockTable
-            stocks={watchlist}
-            showUpdated
-        />
+          stocks={watchlist}
+          showUpdated />
       </div>
     )
   }
 }
 
-const mapStateToProps = ({ watchlist, auth }) => {
-  return { watchlist, auth }
-};
+const mapStateToProps = ({ watchlist, auth }) => ({ watchlist, auth });
 
 export default connect(mapStateToProps,  { fetchWatchlist, toggleMorningEmail })(Watchlist);
