@@ -59,11 +59,9 @@ def timer(f):
 
 class Borrow:
     """Class for interacting with Interactive Broker's Borrow database"""
-    def __init__(self, database_name='stock_loan',
-                 file_names=('australia', 'austria', 'belgium', 'british', 'canada',
-                             'dutch', 'france', 'germany', 'hongkong', 'india', 'italy',
-                             'japan', 'mexico', 'spain', 'swedish', 'swiss', 'usa'),
-                 create_new=False):
+    def __init__(
+            self, database_name='stock_loan', file_names=COUNTRY_CODE.keys(),
+            create_new=False):
         """Initialize, unless create_new is True the stocks database won't be initialized.
         However, currently the class requires the proper database to be previously created"""
 

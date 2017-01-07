@@ -29,23 +29,57 @@ export const UPDATE_MOST_EXPENSIVE = 'UPDATE_MOST_EXPENSIVE';
 export const searchCompany = name => {
   return dispatch => {
     return axios.get(`/api/search/${name}`)
-      .then(response => dispatch({type: UPDATE_COMPANY_SEARCH, payload: response}))
+      .then(response => dispatch({
+        type: UPDATE_COMPANY_SEARCH,
+        payload: response,
+        meta: {
+          analytics: {
+            type: 'searchCompany',
+            payload: name
+          }
+        }
+      }))
       .catch(err => console.log('error in searchCompany', err));
   };
 };
 
-export const resetCompanySearch = () => { return {'type': RESET_COMPANY_SEARCH };};
+export const resetCompanySearch = () =>  ({
+  type: RESET_COMPANY_SEARCH,
+  meta: {
+    analytics: {
+      type: 'reset-company-search'
+    }
+  }
+})
 
 export const fetchStock = ticker =>
   dispatch =>
     axios.get(`/api/ticker/${ticker}`)
-      .then(response => dispatch({type: FETCH_STOCK, payload: response}));
+      .then(response => dispatch({
+        type: FETCH_STOCK,
+        payload: response,
+        meta: {
+          analytics: {
+            type: 'fetch-stock',
+            payload: ticker
+          }
+        }
+      }
+      ));
 
 
 export const fetchTrending = () => {
   return dispatch => {
     return axios.get('/api/trending')
-      .then(response => dispatch({type: FETCH_TRENDING, payload: response}))
+      .then(response => dispatch({
+        type: FETCH_TRENDING,
+        payload: response,
+        meta: {
+          analytics: {
+            type: 'fetch-trending'
+          }
+        }
+      }))
       .catch(err => console.log(err));
   };
 };
@@ -61,7 +95,15 @@ export const fetchWatchlist = () => {
   return (dispatch, getState) => {
     return makeAuthRequest().get('/api/watchlist')
       .then(response => {
-        dispatch({type: FETCH_WATCHLIST, payload: response});
+        dispatch({
+          type: FETCH_WATCHLIST,
+          payload: response,
+          meta: {
+            analytics: {
+              type: 'fetch-watchlist'
+            }
+          }
+        });
       }).catch(err => {
         dispatch({type: SHOW_LOGIN, payload: err});
       });
@@ -72,8 +114,25 @@ export const addWatchlist = symbol => {
   return (dispatch, getState) => {
     return makeAuthRequest().post('/api/watchlist', { symbol })
       .then(response => {
-        dispatch({type: ADD_WATCHLIST, payload: symbol });
-        dispatch({type: FETCH_WATCHLIST, payload: response });
+        dispatch({
+          type: ADD_WATCHLIST,
+          payload: symbol,
+          meta: {
+            analytics: {
+              type: 'add-watchlist',
+              payload: symbol
+            }
+          }
+        });
+        dispatch({
+          type: FETCH_WATCHLIST,
+          payload: response,
+          meta: {
+            analytics: {
+              type: 'fetch-watchlist'
+            }
+          }
+        });
       })
       .catch(err => dispatch({type: SHOW_LOGIN, payload: err}));
   };
@@ -83,8 +142,25 @@ export const removeWatchlist = symbol =>
   (dispatch, getState) =>
     makeAuthRequest().delete(`/api/watchlist?symbol=${symbol}`)
       .then(response => {
-        dispatch({type: REMOVE_WATCHLIST, payload: symbol});
-        dispatch({type: FETCH_WATCHLIST, payload: response});
+        dispatch({
+          type: REMOVE_WATCHLIST,
+          payload: symbol,
+          meta: {
+            analytics: {
+              type: 'remove-watchlist',
+              payload: symbol
+            }
+          }
+        });
+        dispatch({
+          type: FETCH_WATCHLIST,
+          payload: response,
+          meta: {
+            analytics: {
+              type: 'fetch-watchlist'
+            }
+          }
+        });
       })
       .catch(err => dispatch({type: SHOW_LOGIN, payload: err}));
 
@@ -98,7 +174,14 @@ export const hidePreferencesAction = () => ({'type': HIDE_PREFERENCES });
 export const submitLogin = (values, dispatch) =>
   axios.post('/api/auth', values)
     .then(response => {
-      dispatch({type: LOGIN_SUCCESS, payload: response.data.access_token });
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: response.data.access_token,
+        meta: {
+            analytics: {
+              type: 'login'
+            }
+          }});
       dispatch(fetchProfile());
       dispatch(fetchWatchlist());
     })
@@ -131,7 +214,14 @@ export const toggleMorningEmail = () =>
 export const submitNewEmail = (values, dispatch) =>
   makeAuthRequest().post(`/api/user/email`, values)
     .then(response => {
-      dispatch({type: CHANGE_EMAIL_SUCCESS });
+      dispatch({
+        type: CHANGE_EMAIL_SUCCESS,
+        meta: {
+            analytics: {
+              type: 'changed-email'
+            }
+          }
+      });
       dispatch({type: HIDE_PREFERENCES });
     })
     .catch(error => {
@@ -148,7 +238,13 @@ export const submitNewEmail = (values, dispatch) =>
 export const submitNewPassword = (values, dispatch) =>
   makeAuthRequest().post(`/api/user/password`, values)
     .then(response => {
-      dispatch({type: CHANGE_PASSWORD_SUCCESS });
+      dispatch({
+        type: CHANGE_PASSWORD_SUCCESS,
+        meta: {
+            analytics: {
+              type: 'changed-password'
+            }
+          }});
       dispatch({type: HIDE_PREFERENCES });
     })
     .catch(error => {
@@ -163,7 +259,14 @@ export const submitNewPassword = (values, dispatch) =>
     })
 
 
-export const logoutAction = () => ({type: LOGOUT_ACTION});
+export const logoutAction = () => ({
+  type: LOGOUT_ACTION,
+  meta: {
+    analytics: {
+      type: 'logout'
+    }
+  }
+});
 
 
 export const submitRegister = (values, dispatch) =>
@@ -185,7 +288,15 @@ export const clearMessage = () => ({'type': CLEAR_MESSAGE});
 export const submitFilter = (values, dispatch) => {
   return axios.get('/api/filter', {params: values})
     .then(response => {
-      dispatch({type: UPDATE_FILTER, payload: response});
+      dispatch({
+        type: UPDATE_FILTER,
+        payload: response,
+        meta: {
+            analytics: {
+              type: 'submit-filter'
+            }
+          }
+      });
     })
     .catch(error => {
       console.log('error in submitFilter', error);

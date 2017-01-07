@@ -141,6 +141,7 @@ def get_profile():
     """Get username"""
     print(current_identity, 'In get user endpoint')
     return jsonify({'username': current_identity.username,
+                    'id': current_identity.id,
                     'receiveEmail': current_identity.receive_email})
 
 @app.route('/api/filter', methods=['GET'])

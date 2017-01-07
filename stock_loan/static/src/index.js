@@ -12,6 +12,8 @@ import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
 import { Router, Route, browserHistory } from 'react-router';
 import { reducer as formReducer } from 'redux-form';
 
+import { ReactGA, analyticsMiddleware } from './analytics';
+
 import { fetchProfile, fetchWatchlist } from './actions/index';
 
 import App from './components/app';
@@ -45,7 +47,7 @@ const store = createStore(
   reducer,
   (sessionStorage.token) ? { auth: {authenticated: true, showLogin: false }} : {},
   compose(
-    applyMiddleware(thunk),
+    applyMiddleware(thunk, analyticsMiddleware),
     window.devToolsExtension ? window.devToolsExtension() : f => f
   )
 );
@@ -57,10 +59,16 @@ if (store.getState().auth.authenticated) {
   store.dispatch(fetchWatchlist());
 }
 
+function logPageView() {
+  ReactGA.set({ page: window.location.pathname });
+  ReactGA.pageview(window.location.pathname);
+}
+
+
 ReactDOM.render(
   <Provider store={store}>
     <div>
-      <Router history={history}>
+      <Router history={history} onUpdate={logPageView}>
         <Route path='/' component={App}>
           <Route path='report/:ticker' component={HistoricalReport} />
           <Route path='trending' component={Trending} />
