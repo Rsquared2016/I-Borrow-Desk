@@ -6,6 +6,7 @@ export default () => {
     <Row>
       <Col xs={12} md={8} mdOffset={2}>
         <ListGroup>
+          <ListGroupItem>Jan 2, 2016 - Upgrade a bunch of front-end dependencies. Resolve a visual bug with n/a Fee</ListGroupItem>
           <ListGroupItem>February 14, 2016 - New URL! www.iborrowdesk.com</ListGroupItem>
           <ListGroupItem>February, 2016 - New Features: Universal search box, better charting
             with <a href="https://rrag.github.io/react-stockcharts/">React Stockcharts</a>,
