@@ -16,7 +16,9 @@ module.exports = {
       }
     }),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"'
+      'process.env.NODE_ENV': '"production"',
+      'analyticsID': "'UA-65249305-1'",
+      'analyticsDebug': false
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,

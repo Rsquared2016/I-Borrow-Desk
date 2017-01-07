@@ -1,7 +1,7 @@
 import ReactGA from 'react-ga';
 import analytics from 'redux-analytics';
 
-ReactGA.initialize('UA-65249305-1', { debug: true});
+ReactGA.initialize(analyticsID, { debug: analyticsDebug });
 
 const analyticsMiddleware = analytics(({ type, payload } ) =>
   ReactGA.event({

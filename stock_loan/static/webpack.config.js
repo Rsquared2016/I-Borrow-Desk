@@ -11,6 +11,13 @@ module.exports = {
     filename: 'bundle.js'
   },
 
+  plugins:[
+    new webpack.DefinePlugin({
+      'analyticsID': "'UA-89959687-1'",
+      'analyticsDebug': true
+    })
+  ],
+
   module: {
     loaders: [{
       test: /\.css$/,
