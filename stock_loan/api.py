@@ -1,38 +1,38 @@
-from flask import request, jsonify
-from flask_jwt import current_identity, jwt_required
+from flask import request, jsonify, Blueprint
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 
-from . import app, db, stock_loan, mc
-from .models import User
+from .extensions import db, stock_loan, mc
+from .models import User, get_user
 from .utils import historical_report_cache
 
 
-@app.route('/api/ticker/<symbol>', methods=['GET'])
+api_bp = Blueprint('api_bp', __name__, template_folder='templates')
+
+
+@api_bp.route('/api/ticker/<symbol>', methods=['GET'])
 def json_historical_report(symbol):
     """Handler to deliver historical report in JSON format"""
-
-    print("AJAX request for {}".format(symbol))
     real_time = historical_report_cache(symbol=symbol, real_time=True)
     daily = historical_report_cache(symbol=symbol, real_time=False)
     name = stock_loan.get_company_name(symbol)
 
     return jsonify(real_time=real_time, daily=daily, symbol=symbol, name=name)
 
-@app.route('/api/search/<query>', methods=['GET'])
+
+@api_bp.route('/api/search/<query>', methods=['GET'])
 def json_company_search(query):
     """Handler to return possible Company names"""
     if query.upper() in stock_loan.all_symbols:
-        print('Searched for {}'.format(query))
         name = stock_loan.get_company_name(query)
         return jsonify(results=[{'symbol': query.upper(), 'name': name}])
 
-    print('Searched for {}'.format(query))
     summary = stock_loan.name_search(query)
     results = [{'symbol': row.symbol, 'name': row.name} for row in summary] \
         if summary else []
-
     return jsonify(results=results)
 
-@app.route('/api/trending', methods=['GET'])
+
+@api_bp.route('/api/trending', methods=['GET'])
 def json_trending():
     """Return trending stocks"""
     trending_fee = mc.get('trending_fee')
@@ -47,24 +47,26 @@ def json_trending():
 
     return jsonify(available=trending_available, fee=trending_fee)
 
-@app.route('/api/watchlist', methods=['GET', 'POST', 'DELETE'])
-@jwt_required()
+
+@api_bp.route('/api/watchlist', methods=['GET', 'POST', 'DELETE'])
+@jwt_required
 def watchlist():
     """Watchlist endpoint"""
-    print('rendered watchlist for {}'.format(current_identity))
+    user = get_user(get_jwt_identity())
     if request.method == 'POST':
         symbol = request.get_json()['symbol']
-        stock_loan.insert_watchlist(current_identity.id, [symbol])
+        stock_loan.insert_watchlist(user.id, [symbol])
 
     if request.method == 'DELETE':
         symbol = request.args.get('symbol')
-        stock_loan.remove_watchlist(current_identity.id, [symbol.upper()])
+        stock_loan.remove_watchlist(user.id, [symbol.upper()])
         print('delete', symbol)
 
-    watchlist = stock_loan.get_watchlist(current_identity.id)
+    watchlist = stock_loan.get_watchlist(user.id)
     return jsonify(watchlist=stock_loan.summary_report(watchlist))
 
-@app.route('/api/register', methods=['POST'])
+
+@api_bp.route('/api/register', methods=['POST'])
 def register():
     data = request.get_json()
     errors = {}
@@ -91,60 +93,62 @@ def register():
 
     return jsonify(result='{} created'.format(data['username'])), 201
 
-@app.route('/api/user/email', methods=['POST'])
-@jwt_required()
+
+@api_bp.route('/api/user/email', methods=['POST'])
+@jwt_required
 def change_email():
     """Change email endpoint"""
-    print('change email', current_identity)
+    user = get_user(get_jwt_identity())
     data = request.get_json()
-    if not current_identity.check_password(data['password']):
+    if not user.check_password(data['password']):
         return jsonify(errors= {'password': 'Invalid password'}), 401
     elif User.query.filter_by(email=data['email']).first():
         return jsonify(errors={'email': 'A User with that Email Address already exists'}),\
                409
-    current_identity.email = data['email']
-    db.session.add(current_identity)
+    user.email = data['email']
+    db.session.add(user)
     db.session.commit()
     return jsonify(result='Email successfully changed')
 
-@app.route('/api/user/morning', methods=['POST'])
-@jwt_required()
+
+@api_bp.route('/api/user/morning', methods=['POST'])
+@jwt_required
 def change_morning_email():
     """Change email endpoint"""
-    print('change morning email', current_identity)
-    data = request.get_json()
-    current_identity.receive_email = not current_identity.receive_email
-    db.session.add(current_identity)
+    user = get_user(get_jwt_identity())
+    user.receive_email = not user.receive_email
+    db.session.add(user)
     db.session.commit()
     return jsonify(result='Morning email successfully changed')
 
-@app.route('/api/user/password', methods=['POST'])
-@jwt_required()
+
+@api_bp.route('/api/user/password', methods=['POST'])
+@jwt_required
 def change_password():
     """Change password endpoint"""
-    print('change password', current_identity)
+    user = get_user(get_jwt_identity())
     data = request.get_json()
-    if not current_identity.check_password(data['password']):
+    if not user.check_password(data['password']):
         return jsonify(errors={'password': 'Invalid password'}), 401
     elif data['newPassword'] != data['confirmPassword']:
         return jsonify(errors={'confirmPassword': 'Passwords must match'}), 401
 
-    current_identity.set_password(data['newPassword'])
-    db.session.add(current_identity)
+    user.set_password(data['newPassword'])
+    db.session.add(user)
     db.session.commit()
     return jsonify(result='Password successfully changed')
 
 
-@app.route('/api/user', methods=['GET'])
-@jwt_required()
+@api_bp.route('/api/user', methods=['GET'])
+@jwt_required
 def get_profile():
     """Get username"""
-    print(current_identity, 'In get user endpoint')
-    return jsonify({'username': current_identity.username,
-                    'id': current_identity.id,
-                    'receiveEmail': current_identity.receive_email})
+    user = get_user(get_jwt_identity())
+    return jsonify(
+        {'username': user.username, 'id': user.id, 'receiveEmail': user.receive_email})
 
-@app.route('/api/filter', methods=['GET'])
+
+@api_bp.route('/api/filter', methods=['GET'])
 def filter():
     try:
         summary = stock_loan.filter_db(**dict(request.args.items()))
@@ -153,7 +157,8 @@ def filter():
     capped = len(summary) == 100
     return jsonify(results=summary, capped=capped)
 
-@app.route('/api/filter/most_expensive', methods=['GET'])
+
+@api_bp.route('/api/filter/most_expensive', methods=['GET'])
 def most_expensive():
     summary = mc.get('mainpage')
     if not summary:
@@ -162,3 +167,15 @@ def most_expensive():
         mc.set('mainpage', summary)
 
     return jsonify(results=summary)
+
+
+@api_bp.route('/api/auth', methods=['POST'])
+def login():
+    username = request.json.get('username')
+    password = request.json.get('password')
+    user = User.query.filter_by(username=username).one_or_none()
+    if user and user.check_password(password):
+        ret = {'access_token': create_access_token(identity=user)}
+        return jsonify(ret), 200
+    else:
+        return jsonify({'msg': 'Bass username or password'}), 401

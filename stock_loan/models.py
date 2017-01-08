@@ -1,6 +1,6 @@
 from werkzeug import generate_password_hash, check_password_hash
 
-from . import db
+from .extensions import db
 
 
 class User(db.Model):
@@ -53,14 +53,5 @@ class User(db.Model):
         return '{}'.format(self.username)
 
 
-def authenticate(username, password):
-    """Authentication handler for Flask-JWT"""
-    print('User {} logged in'.format(username))
-    user = User.query.filter_by(username=username).first()
-    if user and user.check_password(password):
-        return user
-
-
-def identity(payload):
-    """Return the userinside the payload"""
-    return User.query.get(payload['identity'])
+def get_user(username):
+    return User.query.filter_by(username=username).one()

@@ -1,19 +1,18 @@
-from . import mc
-from . import stock_loan, db
 from functools import wraps
 from flask.ext.login import current_user
+
+from .extensions import stock_loan, db, mc
+from .models import User
+from .email_update import send_emails
 
 
 def historical_report_cache(*, symbol, real_time):
     """Return the historical report for a given
     symbol and real_time flag. Takes care of memcache"""
-    print('Running historical report on ' + symbol)
-
     key_summary = str(symbol + str(real_time))
     summary = mc.get(key_summary)
 
     if not summary:
-        print('cache miss on ' + key_summary)
         summary = stock_loan.historical_report(symbol, real_time)
         if summary:
             mc.set(key_summary, summary)
@@ -32,3 +31,18 @@ def view_logger(func):
         return func(*args, **kwargs)
 
     return decorated_view
+
+
+def email_job():
+    """Helper function for scheduled email sender function"""
+    users = User.query.filter_by(receive_email=True).all()
+    send_emails(users, stock_loan)
+
+
+def refresh_borrow():
+    """Helper function for refreshing instance summary data for the Borrow object
+    Does NOT perform any actual database updates"""
+    stock_loan.update_trending()
+    stock_loan.refresh_all_symbols()
+    stock_loan.refresh_latest_all_symbols()
+    print("Refreshed Local Borrow data")

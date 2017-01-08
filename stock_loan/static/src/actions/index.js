@@ -87,7 +87,7 @@ export const fetchTrending = () => {
 const makeAuthRequest = () => {
   const token = sessionStorage.token;
   return axios.create({
-    headers: {'Authorization': `JWT ${token}`}
+    headers: {'Authorization': `Bearer ${token}`}
   });
 };
 
