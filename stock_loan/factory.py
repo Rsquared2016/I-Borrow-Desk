@@ -11,7 +11,7 @@ from .extensions import login_manager, limiter, db, jwt_manager, migrate, stock_
 
 def create_app(debug=False, refresh_stock_loan=True):
     if refresh_stock_loan:
-        stock_loan.perform_refresh()
+        stock_loan.update_trending()
 
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object('config')
