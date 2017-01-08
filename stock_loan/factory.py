@@ -9,10 +9,11 @@ from flask_admin import Admin
 from .extensions import login_manager, limiter, db, jwt_manager
 
 
-def create_app():
+def create_app(debug=False):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object('config')
     app.config.from_pyfile('config.py')
+    app.debug = debug
 
     login_manager.init_app(app)
 
@@ -41,7 +42,7 @@ def create_app():
     limiter.logger.addHandler(StreamHandler())
 
     # logging
-    if not app.debug:
+    if not debug:
         que = queue.Queue(-1)  # no limit on size
         # Create a QueueHandler to receive logging
         queue_handler = QueueHandler(que)
