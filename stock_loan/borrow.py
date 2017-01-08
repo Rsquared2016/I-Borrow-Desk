@@ -84,10 +84,6 @@ class Borrow:
         self.all_symbols = []
         self.latest_symbols = []
 
-        # update symbols tracked
-        self.refresh_all_symbols()
-        self.refresh_latest_all_symbols()
-
         # set count variables
         self.all_symbols_count = len(self.all_symbols)
         self.latest_symbols_count = len(self.latest_symbols)
@@ -95,6 +91,10 @@ class Borrow:
         # timestamp dictionary - for avoiding duplicate imports
         self._timestamps = {country: None for country in self.file_names}
 
+    def perform_refresh(self):
+        # update symbols tracked
+        self.refresh_all_symbols()
+        self.refresh_latest_all_symbols()
         # update trending lists
         self.update_trending()
 

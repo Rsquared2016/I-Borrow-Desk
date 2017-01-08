@@ -6,10 +6,13 @@ import queue
 from flask import Flask
 from flask_admin import Admin
 
-from .extensions import login_manager, limiter, db, jwt_manager, migrate
+from .extensions import login_manager, limiter, db, jwt_manager, migrate, stock_loan
 
 
-def create_app(debug=False):
+def create_app(debug=False, refresh_stock_loan=True):
+    if refresh_stock_loan:
+        stock_loan.perform_refresh()
+
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object('config')
     app.config.from_pyfile('config.py')
