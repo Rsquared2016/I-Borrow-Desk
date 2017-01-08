@@ -1,6 +1,7 @@
+from sqlalchemy.sql.functions import now
 from werkzeug import generate_password_hash, check_password_hash
 
-from .extensions import db
+from .extensions import db, stock_loan
 
 
 class User(db.Model):
@@ -11,7 +12,8 @@ class User(db.Model):
     password_hash = db.Column(db.String(250))
     receive_email = db.Column(db.Boolean, index=True)
     admin = db.Column(db.Boolean)
-    _views = db.Column(db.Integer)
+    views = db.Column(db.Integer, default=0)
+    last_login = db.Column(db.DateTime, nullable=True)
 
     def __init__(self, username, password, email, receive_email=True, admin=False):
         self.username = username
@@ -19,7 +21,8 @@ class User(db.Model):
         self.email = email
         self.receive_email = receive_email
         self.admin = admin
-        self._views = 0
+        self.views = 0
+        self.last_login = now()
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -39,19 +42,25 @@ class User(db.Model):
     def is_anonymous(self):
         return False
 
-    def get_id(self):
-        return self.id
-
     @property
     def is_admin(self):
         return self.admin
 
+    @property
+    def watchlist(self):
+        return stock_loan.get_watchlist(self.id)
+
     def increment_views(self):
-        self._views += 1
+        self.views += 1
 
     def __repr__(self):
         return '{}'.format(self.username)
 
 
 def get_user(username):
-    return User.query.filter_by(username=username).one()
+    user = User.query.filter_by(username=username).one()
+    user.last_login = now()
+    user.increment_views()
+    db.session.add(user)
+    db.session.commit()
+    return user

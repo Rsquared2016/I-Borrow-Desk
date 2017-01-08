@@ -6,7 +6,7 @@ import queue
 from flask import Flask
 from flask_admin import Admin
 
-from .extensions import login_manager, limiter, db, jwt_manager
+from .extensions import login_manager, limiter, db, jwt_manager, migrate
 
 
 def create_app(debug=False):
@@ -18,11 +18,12 @@ def create_app(debug=False):
     login_manager.init_app(app)
 
     db.init_app(app)
+    migrate.init_app(app, db)
 
     admin = Admin(name='IBorrowDesk', template_mode='bootstrap3')
     admin.init_app(app)
 
-    from .routes import AdminView, DbView, templated_bp
+    from .routes import AdminView, UserView, templated_bp
     admin.add_view(AdminView(name='Home'))
     app.register_blueprint(templated_bp)
 
@@ -36,7 +37,7 @@ def create_app(debug=False):
     def identity(user):
         return user.username
 
-    admin.add_view(DbView(User, db.session))
+    admin.add_view(UserView(User, db.session))
 
     limiter.init_app(app)
     limiter.logger.addHandler(StreamHandler())

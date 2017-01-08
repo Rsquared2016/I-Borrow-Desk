@@ -36,7 +36,7 @@ class AdminView(BaseView):
             return self.render('admin_homepage_template.html')
 
 
-class DbView(ModelView):
+class UserView(ModelView):
     def is_accessible(self):
         if current_user.is_authenticated:
             return current_user.is_admin
@@ -47,6 +47,9 @@ class DbView(ModelView):
         if not self.is_accessible():
             raise NotFound
 
+    column_list = (
+        'username', 'email', 'receive_email', 'admin', 'views', 'last_login', 'watchlist',
+    )
 
 @login_manager.user_loader
 def load_user(userid):
