@@ -1,6 +1,6 @@
 import memcache
-from flask.ext.login import LoginManager
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+from flask_sqlalchemy import SQLAlchemy
 from flask_limiter import Limiter
 from flask_limiter.util import get_ipaddr
 from flask_jwt_extended import JWTManager

@@ -2,7 +2,7 @@ import os
 import logging
 
 from flask import render_template, request, redirect, url_for, flash, Blueprint
-from flask.ext.login import login_user, logout_user, current_user, login_required
+from flask_login import login_user, logout_user, current_user, login_required
 from flask_admin import BaseView, expose
 from flask_admin.contrib.sqla import ModelView
 from werkzeug.exceptions import NotFound
@@ -83,10 +83,8 @@ def admin_login():
 
     # Flask login
     login_user(user)
-
     flash('Welcome {}!'.format(user.username))
-    print('User: {} logged in'.format(user.username))
-    return 'logged in', 200
+    return redirect('/admin')
 
 
 @templated_bp.route('/admin_logout')

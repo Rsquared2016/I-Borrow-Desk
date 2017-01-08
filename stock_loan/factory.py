@@ -68,6 +68,7 @@ def create_app():
     @app.before_first_request
     def create_table():
         db.create_all()
+        db.reflect()
 
     from apscheduler.schedulers.background import BackgroundScheduler
 

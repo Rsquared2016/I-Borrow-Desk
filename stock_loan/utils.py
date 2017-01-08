@@ -1,5 +1,5 @@
 from functools import wraps
-from flask.ext.login import current_user
+from flask_login import current_user
 
 from .extensions import stock_loan, db, mc
 from .models import User
