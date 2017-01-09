@@ -42,6 +42,9 @@ class User(db.Model):
     def is_anonymous(self):
         return False
 
+    def get_id(self):
+        return self.id
+
     @property
     def is_admin(self):
         return self.admin
