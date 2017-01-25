@@ -3,10 +3,24 @@ from logging import StreamHandler
 from logging.handlers import SMTPHandler, QueueHandler, QueueListener
 import queue
 
+from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask
 from flask_admin import Admin
 
 from .extensions import login_manager, limiter, db, jwt_manager, migrate, stock_loan
+from .utils import refresh_borrow, email_job
+
+
+apsched = BackgroundScheduler()
+apsched.start()
+
+# Add a job - morning emails
+apsched.add_job(
+    email_job, 'cron', day_of_week='mon-fri', hour='9', minute='4',
+    timezone='America/New_York')
+
+# Refresh trending stocks and collective stats on the hour
+apsched.add_job(refresh_borrow, 'cron', minute='5')
 
 
 def create_app(debug=False, refresh_stock_loan=True):
@@ -75,21 +89,11 @@ def create_app(debug=False, refresh_stock_loan=True):
         db.create_all()
         db.reflect()
 
-    from apscheduler.schedulers.background import BackgroundScheduler
+
 
     @app.before_first_request
     def initialize():
         """Initialize the scheduler for recurring jobs"""
-        apsched = BackgroundScheduler()
-        apsched.start()
 
-        from .utils import refresh_borrow, email_job
-        # Add a job - morning emails
-        apsched.add_job(
-            email_job, 'cron', day_of_week='mon-fri', hour='9', minute='4',
-            timezone='America/New_York')
-
-        # Refresh trending stocks and collective stats on the hour
-        apsched.add_job(refresh_borrow, 'cron', minute='5')
 
     return app
