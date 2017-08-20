@@ -20,7 +20,7 @@ apsched.add_job(
     timezone='America/New_York')
 
 # Refresh trending stocks and collective stats on the hour
-apsched.add_job(refresh_borrow, 'cron', minute='5')
+apsched.add_job(refresh_borrow, 'cron', minute='5', timezone='America/New_York')
 
 
 def create_app(debug=False, refresh_stock_loan=True):
