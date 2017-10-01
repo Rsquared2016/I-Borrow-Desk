@@ -1,3 +1,4 @@
 -r base.txt
 records==0.4.3
 newrelic==2.60.0.46
+gunicorn==19.6.0
