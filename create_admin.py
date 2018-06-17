@@ -1,4 +1,5 @@
-from stock_loan import User, db
+from stock_loan.models import User
+from stock_loan.extensions import db
 
 
 def create_admin(username, password, email, receive_email):
