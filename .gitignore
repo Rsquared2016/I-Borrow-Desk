@@ -1,8 +1,2 @@
-/instance
-# Created by .ignore support plugin (hsz.mobi)
-
-/stock_loan/.idea
-/stock_loan/static/dist
-/stock_loan/static/node_modules
-/all_symbols_fee_over_0.xls
-/get_index.py
+/stock_loan/static/dist/js
+/front_end/node_modules
