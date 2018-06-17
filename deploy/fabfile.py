@@ -10,7 +10,7 @@ WEBAPP_DIRECTORY = os.path.join(os.path.abspath('..'), 'stock_loan')
 
 REMOTE_CODE_DIRECTORY = '/home/cameron/iborrowdesk'
 REMOTE_DIRECTORY = '/var/www/iborrowdesk.com/static/'
-REPO = 'git@bitbucket.org:cjmochrie/I-Borrow-Desk.git'
+REPO = 'git@github.com:cjmochrie/I-Borrow-Desk.git'
 
 def deploy():
     with settings(warn_only=True):
