@@ -1,5 +1,6 @@
 import os
 from fabric.api import *
+from fabric.contrib.project import rsync_project
 
 
 env.hosts = ['iborrowdesk.com']

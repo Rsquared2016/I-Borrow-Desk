@@ -7,7 +7,7 @@ module.exports = {
   entry: ['./src/index'],
   output: {
     path: path.join(__dirname, '..', 'stock_loan', 'static', 'dist', 'js'),
-    filename: 'bundle.min.js'
+    filename: 'bundle.js'
   },
   plugins: [
     new webpack.optimize.UglifyJsPlugin({
