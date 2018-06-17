@@ -2,7 +2,7 @@ import os
 import re
 from twython import TwythonStreamer
 from twython import Twython
-from .borrow import Borrow
+from borrow import Borrow
 
 # Grab Twitter  config
 APP_KEY = os.getenv('APP_KEY', '')
