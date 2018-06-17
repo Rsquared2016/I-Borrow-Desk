@@ -1,18 +1,14 @@
-import configparser
 import os
 import re
 from twython import TwythonStreamer
 from twython import Twython
 from .borrow import Borrow
 
-dirname, file_name = os.path.split(os.path.abspath(__file__))
 # Grab Twitter  config
-parser = configparser.ConfigParser()
-parser.read(dirname + '/twitter_settings.cfg')
-APP_KEY = parser.get('twitter', 'APP_KEY')
-APP_SECRET = parser.get('twitter', 'APP_SECRET')
-OAUTH_TOKEN = parser.get('twitter', 'OAUTH_TOKEN')
-OAUTH_TOKEN_SECRET = parser.get('twitter', 'OAUTH_TOKEN_SECRET')
+APP_KEY = os.getenv('APP_KEY', '')
+APP_SECRET = os.getenv('APP_SECRET', '')
+OAUTH_TOKEN = os.getenv('OAUTH_TOKEN', '')
+OAUTH_TOKEN_SECRET = os.getenv('OAUTH_TOKEN_SECRET', '')
 
 TICKER_MATCH = r"\$([a-zA-Z0-9\.]{1,8})"
 
