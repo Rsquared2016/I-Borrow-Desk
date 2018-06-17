@@ -27,7 +27,6 @@ apsched.add_job(refresh_borrow, 'cron', minute='5', timezone='America/New_York')
 def create_app(debug=False, refresh_stock_loan=True):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object('config')
-    app.config.from_pyfile('config.py')
     app.debug = debug
 
     login_manager.init_app(app)
