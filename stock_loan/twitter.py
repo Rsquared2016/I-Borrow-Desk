@@ -5,10 +5,10 @@ from twython import Twython
 from borrow import Borrow
 
 # Grab Twitter  config
-APP_KEY = os.getenv('APP_KEY', '')
-APP_SECRET = os.getenv('APP_SECRET', '')
-OAUTH_TOKEN = os.getenv('OAUTH_TOKEN', '')
-OAUTH_TOKEN_SECRET = os.getenv('OAUTH_TOKEN_SECRET', '')
+APP_KEY = os.getenv('APP_KEY', '').strip()
+APP_SECRET = os.getenv('APP_SECRET', '').strip()
+OAUTH_TOKEN = os.getenv('OAUTH_TOKEN', '').strip()
+OAUTH_TOKEN_SECRET = os.getenv('OAUTH_TOKEN_SECRET', '').strip()
 
 TICKER_MATCH = r"\$([a-zA-Z0-9\.]{1,8})"
 

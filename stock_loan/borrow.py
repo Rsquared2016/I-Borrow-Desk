@@ -3,7 +3,6 @@ from ftplib import FTP
 from datetime import datetime
 import re
 import os
-import configparser
 import time
 import collections
 from functools import wraps
@@ -14,11 +13,8 @@ from psycopg2.extensions import AsIs
 dirname, file_name = os.path.split(os.path.abspath(__file__))
 DOWNLOAD_DIRECTORY = dirname + '/downloads/'
 
-# Grab database config
-parser = configparser.ConfigParser()
-parser.read(dirname + '/database_settings.cfg')
-username = parser.get('postgresql', 'username')
-password = parser.get('postgresql', 'password')
+username = os.getenv('DATABASE_USERNAME', '').strip()
+password = os.getenv('DATABASE_PASSWORD', '').strip()
 
 # Dictionary for mapping filenames (countries) to suffixes for symbols (ie; HCG.CA)
 COUNTRY_CODE = {
