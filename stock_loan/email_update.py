@@ -22,12 +22,7 @@ env = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATE_DIR))
 def send_emails(users, stockLoan):
     """Takes a list of users and a Borrow instance
         and sends out emails with each user's watchlist"""
-
-    # Grab the account password and set username
-    with open(dirname + '/account.txt', 'rb') as fp:
-        password = fp.read()
-
-    password = password.decode(encoding='UTF-8')
+    password = os.getenv('MAIL_PASSWORD').strip()
 
     username = 'iborrowdesk@gmail.com'
 
