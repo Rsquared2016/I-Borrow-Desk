@@ -51,5 +51,5 @@ def cleanup_local_dist(webapp_directory=WEBAPP_DIRECTORY):
 def copy_static(remote_dir=REMOTE_DIRECTORY):
     rsync_project(
         remote_dir=remote_dir,
-        local_dir=os.path.join(os.path.abspath('..'), 'stock_loan', 'static', 'dist'),
+        local_dir=os.path.join(os.path.abspath('..'), 'stock_loan', 'static', 'dist/'),
     )
