@@ -7,7 +7,7 @@ module.exports = {
   devtool: 'source-map',
   entry: ['./src/index'],
   output: {
-    path: path.join(__dirname, 'dist', 'js'),
+    path: path.join(__dirname, '..', 'stock_loan', 'dist', 'js'),
     filename: 'bundle.js'
   },
 

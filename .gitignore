@@ -1,2 +1,8 @@
 /stock_loan/static/dist/js
-/front_end/node_modules
+front_end/node_modules/**
+.idea
+.envrc
+__pycache__
+**.pyc
+**.db
+**/node_modules/**
