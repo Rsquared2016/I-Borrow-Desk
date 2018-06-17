@@ -11,6 +11,6 @@ DATABASE_CONNECT_OPTIONS = {}
 # operations using the other.
 THREADS_PER_PAGE = 2
 
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY').strip()
 JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(hours=24)
 SQLALCHEMY_TRACK_MODIFICATIONS = False

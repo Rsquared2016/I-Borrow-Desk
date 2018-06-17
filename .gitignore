@@ -1,4 +1,4 @@
-/stock_loan/static/dist/js
+/stock_loan/static/js
 front_end/node_modules/**
 .idea
 .envrc
