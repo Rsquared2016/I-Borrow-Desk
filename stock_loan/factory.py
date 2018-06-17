@@ -1,3 +1,4 @@
+import os
 import logging
 from logging import StreamHandler
 from logging.handlers import SMTPHandler, QueueHandler, QueueListener
@@ -64,12 +65,15 @@ def create_app(debug=False, refresh_stock_loan=True):
         queue_handler.setLevel(logging.ERROR)
 
         # Create the actual mail handler
-        credentials = app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD']
+        credentials = os.getenv('MAIL_USERNAME').strip(), os.getenv('MAIL_PASSWORD').strip()
         mail_handler = SMTPHandler(
-            ('smtp.gmail.com', '587'), app.config['APP_ADDRESS'],
-            [app.config['ADMIN_ADDRESS']], 'stock_loan exception',
+            ('smtp.gmail.com', '587'),
+            os.getenv('APP_ADDRESS').strip(),
+            os.getenv('ADMIN_ADDRESS').strip(),
+            'stock_loan exception',
             credentials=credentials,
-            secure=())
+            secure=()
+        )
 
         # Create a listener handler to deque things from the QueueHandler and send to the mail handler
         listener = QueueListener(que, mail_handler)
