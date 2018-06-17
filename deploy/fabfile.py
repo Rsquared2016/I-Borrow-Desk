@@ -7,16 +7,17 @@ env.use_ssh_config = True
 VIRTUALENV = '/home/cameron/.pyenv/versions/iborrowdesk/bin/activate'
 SCRIPT_DIRECTORY = os.path.join(os.path.abspath('..'), 'front_end')
 WEBAPP_DIRECTORY = os.path.join(os.path.abspath('..'), 'stock_loan')
+
+REMOTE_CODE_DIRECTORY = '/home/cameron/iborrowdesk'
 REMOTE_DIRECTORY = '/var/www/iborrowdesk.com/static/'
+REPO = 'git@bitbucket.org:cjmochrie/I-Borrow-Desk.git'
 
 def deploy():
-    code_dir = '/home/cameron/iborrowdesk'
-    repo = "git@bitbucket.org:cjmochrie/I-Borrow-Desk.git"
     with settings(warn_only=True):
-        if run("test -d %s" % code_dir).failed:
-            run("git clone {} {}".format(repo, code_dir))
-    with cd(code_dir):
-        run("git pull {}".format(repo))
+        if run("test -d %s" % REMOTE_CODE_DIRECTORY).failed:
+            run("git clone {} {}".format(REPO, REMOTE_CODE_DIRECTORY))
+    with cd(REMOTE_CODE_DIRECTORY):
+        run("git pull {}".format(REPO))
         with prefix('source {}'.format(VIRTUALENV)):
             run('pip install -r requirements/prod.txt')
     #         # with shell_env(PYFILE=PYFILE):
