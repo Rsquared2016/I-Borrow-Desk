@@ -12,6 +12,8 @@ from psycopg2.extensions import AsIs
 
 dirname, file_name = os.path.split(os.path.abspath(__file__))
 DOWNLOAD_DIRECTORY = dirname + '/downloads/'
+if not os.path.exists(DOWNLOAD_DIRECTORY):
+    os.makedirs(DOWNLOAD_DIRECTORY)
 
 username = os.getenv('DATABASE_USERNAME', '').strip()
 password = os.getenv('DATABASE_PASSWORD', '').strip()
