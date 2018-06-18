@@ -1,4 +1,5 @@
 import os
+import sys
 import re
 from twython import TwythonStreamer
 from twython import Twython
@@ -32,12 +33,14 @@ class BorrowStreamer(TwythonStreamer):
                 print(data['user']['screen_name'])
                 print(data['id_str'])
                 self._respond(data)
+        sys.stdout.flush()
 
 
     def on_error(self, status_code, data):
         print(status_code)
         print(data)
         print("There was an error")
+        sys.stdout.flush()
 
     def _respond(self, data):
         """Respond (or not) to a matched Tweet"""
