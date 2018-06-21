@@ -11,6 +11,7 @@ export const FETCH_TRENDING = 'FETCH_TRENDING';
 export const FETCH_WATCHLIST = 'FETCH_WATCHLIST';
 export const ADD_WATCHLIST = 'ADD_WATCHLIST';
 export const REMOVE_WATCHLIST = 'REMOVE_WATCHLIST';
+export const CLEAR_WATCHLIST = 'CLEAR_WATCHLIST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGOUT_ACTION = 'LOGOUT_ACTION';
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
@@ -259,13 +260,16 @@ export const submitNewPassword = (values, dispatch) =>
     })
 
 
-export const logoutAction = () => ({
-  type: LOGOUT_ACTION,
-  meta: {
-    analytics: {
-      type: 'logout'
+export const logoutAction = () => ((dispatch) => {
+  dispatch({
+    type: LOGOUT_ACTION,
+    meta: {
+      analytics: {
+        type: 'logout'
+      }
     }
-  }
+  });
+  dispatch({ type: CLEAR_WATCHLIST });
 });
 
 

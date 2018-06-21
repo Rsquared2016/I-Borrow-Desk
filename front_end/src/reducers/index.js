@@ -7,7 +7,7 @@ import {  FETCH_STOCK, UPDATE_COMPANY_SEARCH, RESET_COMPANY_SEARCH, FETCH_TRENDI
 import { LOGIN_SUCCESS, LOGOUT_ACTION, SHOW_LOGIN, HIDE_LOGIN, SHOW_PREFERENCES, HIDE_PREFERENCES }
   from '../actions/index';
 import { REGISTER_SUCCESS, FETCH_PROFILE } from '../actions/index';
-import { FETCH_WATCHLIST, ADD_WATCHLIST, REMOVE_WATCHLIST } from '../actions/index';
+import { FETCH_WATCHLIST, ADD_WATCHLIST, REMOVE_WATCHLIST, CLEAR_WATCHLIST } from '../actions/index';
 import { CLEAR_MESSAGE } from '../actions/index';
 import { UPDATE_FILTER, UPDATE_MOST_EXPENSIVE } from '../actions/index';
 import { CHANGE_EMAIL_SUCCESS, CHANGE_PASSWORD_SUCCESS } from '../actions/index';
@@ -81,6 +81,8 @@ export const WatchlistReducer = (state=[], action) => {
       } else {
         return state;
       }
+    case CLEAR_WATCHLIST:
+      return [];
     default:
       return state
   }
