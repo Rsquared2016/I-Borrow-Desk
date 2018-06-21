@@ -15,7 +15,7 @@ let Login = props => {
         <Modal.Title>Login</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} name="login">
           <Field
             name="username"
             component={utils.renderField}

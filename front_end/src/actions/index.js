@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { routerActions } from 'react-router-redux';
-import { SubmissionError } from 'redux-form';
+import { SubmissionError, reset } from 'redux-form';
 
 import { store }  from '../index';
 
@@ -185,6 +184,7 @@ export const submitLogin = (values, dispatch) =>
           }});
       dispatch(fetchProfile());
       dispatch(fetchWatchlist());
+      dispatch(reset('LoginForm'))
     })
     .catch(error => {
       throw new SubmissionError({
