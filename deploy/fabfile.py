@@ -35,11 +35,12 @@ def deploy():
 
 def build_frontend(script_directory=SCRIPT_DIRECTORY, webapp_directory=WEBAPP_DIRECTORY):
     with lcd(webapp_directory):
-        local('mkdir static/dist')
+        local('mkdir -p static/dist')
         local('cp -r static/css static/dist/css')
         local('cp -r static/fonts static/dist/fonts')
 
     with lcd(script_directory):
+        local('nvm use')
         local('npm install')
         local('npm run deploy') # deposits js bundle in dist/js
 
