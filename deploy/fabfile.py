@@ -40,7 +40,7 @@ def build_frontend(script_directory=SCRIPT_DIRECTORY, webapp_directory=WEBAPP_DI
         local('cp -r static/fonts static/dist/fonts')
 
     with lcd(script_directory):
-        local('nvm use')
+        local('. ~/.nvm/nvm.sh use')
         local('npm install')
         local('npm run deploy') # deposits js bundle in dist/js
 
