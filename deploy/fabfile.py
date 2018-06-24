@@ -21,8 +21,7 @@ def deploy():
         run("git pull {}".format(REPO))
         with prefix('source {}'.format(VIRTUALENV)):
             run('pip install -r requirements/prod.txt')
-    #         # with shell_env(PYFILE=PYFILE):
-    #         #     run('python migrate.py db upgrade')
+            run('flask db upgrade')
 
     build_frontend()
     copy_static()
