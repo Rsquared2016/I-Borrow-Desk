@@ -91,7 +91,7 @@ export const WatchlistReducer = (state=[], action) => {
 export const MessageReducer = (state={text: '', type: ''}, action) => {
   switch(action.type) {
     case REGISTER_SUCCESS:
-      return {text: 'Registration successful!', type: 'success'};
+      return {text: 'Registration successful! In order to login you will need to confirm the email address you signed up with. Check your email for a link!', type: 'success'};
     case LOGIN_SUCCESS:
       return {text: 'Welcome!', type: 'success'};
     case ADD_WATCHLIST:

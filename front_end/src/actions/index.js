@@ -254,7 +254,7 @@ export const submitNewPassword = (values, dispatch) =>
       } else {
         console.log('Unhandled error', error);
       }
-    })
+    });
 
 
 export const logoutAction = () => ((dispatch) => {
@@ -274,7 +274,7 @@ export const submitRegister = (values, dispatch) =>
   axios.post('/api/register', values)
     .then(response => {
       dispatch({type: REGISTER_SUCCESS, payload: response});
-      dispatch({type: SHOW_LOGIN});
+      dispatch(reset('RegisterForm'));
     })
     .catch(error => {
       throw new SubmissionError({
