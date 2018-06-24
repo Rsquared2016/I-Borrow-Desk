@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {Modal, Button} from 'react-bootstrap';
+import {Modal, Button, FormGroup, HelpBlock} from 'react-bootstrap';
 import {reduxForm, Field} from 'redux-form';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -8,7 +8,7 @@ import utils from '../utils';
 import {hideLoginAction, submitLogin} from '../actions/index';
 
 let Login = props => {
-  const { show, hideLoginAction, handleSubmit } = props;
+  const { show, hideLoginAction, handleSubmit, error } = props;
   return (
     <Modal show={show} onHide={hideLoginAction}>
       <Modal.Header closeButton>
@@ -16,21 +16,26 @@ let Login = props => {
       </Modal.Header>
       <Modal.Body>
         <form onSubmit={handleSubmit} name="login">
-          <Field
-            name="username"
-            component={utils.renderField}
-            type="text"
-            label="Username"
-          />
-          <Field
-            name="password"
-            component={utils.renderField}
-            type="password"
-            label="Password"
-          />
-          <Button type="submit">
-            Submit
-          </Button>
+         <FormGroup validationState={error ? 'error' : ''}>
+            <Field
+              name="username"
+              component={utils.renderField}
+              type="text"
+              label="Username"
+            />
+            <Field
+              name="password"
+              component={utils.renderField}
+              type="password"
+              label="Password"
+            />
+            <Button type="submit">
+              Submit
+            </Button>
+            <HelpBlock>
+              {error ? error : ''}
+            </HelpBlock>
+         </FormGroup>
         </form>
       </Modal.Body>
     </Modal>

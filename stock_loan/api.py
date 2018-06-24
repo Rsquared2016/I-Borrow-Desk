@@ -1,6 +1,7 @@
 from flask import request, jsonify, Blueprint
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 
+from stock_loan.auth.email import send_confirmation
 from .extensions import db, stock_loan, mc
 from .models import User, get_user
 from .utils import historical_report_cache
@@ -90,6 +91,7 @@ def register():
     user = User(data['username'], data['password'], data['email'], True)
     db.session.add(user)
     db.session.commit()
+    send_confirmation(user)
 
     return jsonify(result='{} created'.format(data['username'])), 201
 
@@ -175,7 +177,10 @@ def login():
     password = request.json.get('password')
     user = User.query.filter_by(username=username).one_or_none()
     if user and user.check_password(password):
-        ret = {'access_token': create_access_token(identity=user)}
-        return jsonify(ret), 200
+        if user.confirmed_at:
+            ret = {'access_token': create_access_token(identity=user)}
+            return jsonify(ret), 200
+        else:
+            return jsonify({'msg': 'Email not yet confirmed - check your email'}), 401
     else:
-        return jsonify({'msg': 'Bass username or password'}), 401
+        return jsonify({'msg': 'Bad username or password'}), 401

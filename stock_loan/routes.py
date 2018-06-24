@@ -1,14 +1,16 @@
 import os
 import logging
 
-from flask import render_template, request, redirect, url_for, flash, Blueprint
+from flask import render_template, request, redirect, flash, Blueprint, \
+    current_app
 from flask_login import login_user, logout_user, current_user, login_required
 from flask_admin import BaseView, expose
 from flask_admin.contrib.sqla import ModelView
+from itsdangerous import URLSafeTimedSerializer
 from werkzeug.exceptions import NotFound
 
 
-from .extensions import login_manager, limiter
+from .extensions import login_manager, limiter, db
 from .models import User
 
 
@@ -95,3 +97,19 @@ def admin_login():
 def admin_logout():
     logout_user()
     return 'logged out', 200
+
+
+@templated_bp.route('/confirm_email/<token>')
+def confirm_email(token):
+    ts = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    try:
+        email = ts.loads(token, salt='email-confirm-key')
+    except:
+        return 'Not Found', 404
+
+    user = User.query.filter_by(email=email).first_or_404()
+    user.confirm()
+    db.session.add(user)
+    db.session.commit()
+
+    return render_template('email_confirmed.html')

@@ -14,3 +14,11 @@ THREADS_PER_PAGE = 2
 SECRET_KEY = os.getenv('SECRET_KEY').strip()
 JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(hours=24)
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+MAIL_SERVER = 'smtp.gmail.com'
+MAIL_PORT = 587
+MAIL_USE_TLS = True
+MAIL_DEBUG = False
+MAIL_USERNAME = 'iborrowdesk@gmail.com'
+MAIL_PASSWORD = os.getenv('MAIL_PASSWORD').strip()
+MAIL_DEFAULT_SENDER = 'iborrowdesk@gmail.com'

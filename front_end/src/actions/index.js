@@ -187,10 +187,7 @@ export const submitLogin = (values, dispatch) =>
       dispatch(reset('LoginForm'))
     })
     .catch(error => {
-      throw new SubmissionError({
-        _error: 'Login Failed',
-        username: 'Incorrect username or password',
-        password: 'Incorrect username or password'});
+      throw new SubmissionError({ _error: error.response.data.msg });
     });
 
 export const fetchProfile = () => {
@@ -203,7 +200,7 @@ export const fetchProfile = () => {
         dispatch({type: SHOW_LOGIN, payload: error});
       });
   };
-}
+};
 
 export const toggleMorningEmail = () =>
   dispatch =>

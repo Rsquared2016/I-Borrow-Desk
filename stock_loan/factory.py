@@ -8,7 +8,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask
 from flask_admin import Admin
 
-from .extensions import login_manager, limiter, db, jwt_manager, migrate, stock_loan
+from .extensions import login_manager, limiter, db, jwt_manager, migrate, stock_loan, mailer
 from .utils import refresh_borrow, email_job
 
 
@@ -33,6 +33,8 @@ def create_app(debug=False, refresh_stock_loan=True):
 
     db.init_app(app)
     migrate.init_app(app, db)
+
+    mailer.init_app(app)
 
     admin = Admin(name='IBorrowDesk', template_mode='bootstrap3')
     admin.init_app(app)
@@ -63,7 +65,7 @@ def create_app(debug=False, refresh_stock_loan=True):
         queue_handler = QueueHandler(que)
         queue_handler.setLevel(logging.ERROR)
 
-        # Create the actual mail handler
+        # Create the actual mailer handler
         credentials = os.getenv('MAIL_USERNAME').strip(), os.getenv('MAIL_PASSWORD').strip()
         mail_handler = SMTPHandler(
             ('smtp.gmail.com', '587'),
@@ -74,7 +76,7 @@ def create_app(debug=False, refresh_stock_loan=True):
             secure=()
         )
 
-        # Create a listener handler to deque things from the QueueHandler and send to the mail handler
+        # Create a listener handler to deque things from the QueueHandler and send to the mailer handler
         listener = QueueListener(que, mail_handler)
         listener.start()
 
