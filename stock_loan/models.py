@@ -14,6 +14,7 @@ class User(db.Model):
     admin = db.Column(db.Boolean)
     views = db.Column(db.Integer, default=0)
     last_login = db.Column(db.DateTime, nullable=True)
+    confirmed_at = db.Column(db.DateTime, nullable=True)
 
     def __init__(self, username, password, email, receive_email=True, admin=False):
         self.username = username
@@ -29,6 +30,9 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def confirm(self):
+        self.confirmed_at = now()
 
     @property
     def is_active(self):
