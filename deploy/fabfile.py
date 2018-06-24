@@ -21,7 +21,8 @@ def deploy():
         run("git pull {}".format(REPO))
         with prefix('source {}'.format(VIRTUALENV)):
             run('pip install -r requirements/prod.txt')
-            run('flask db upgrade')
+            with shell_env(**REQUIRED_ENVS):
+                run('flask db upgrade')
 
     build_frontend()
     copy_static()
@@ -54,3 +55,12 @@ def copy_static(remote_dir=REMOTE_DIRECTORY):
         remote_dir=remote_dir,
         local_dir=os.path.join(os.path.abspath('..'), 'stock_loan', 'static', 'dist/'),
     )
+
+REQUIRED_ENVS = {
+    'ADMIN_ADDRESS': '',
+    'APP_ADDRESS': '',
+    'DATABASE_PATH': os.getenv('REMOTE_DATABASE_PATH').strip(),
+    'MAIL_PASSWORD': '',
+    'MAIL_USERNAME': '',
+    'SECRET_KEY': '',
+}
