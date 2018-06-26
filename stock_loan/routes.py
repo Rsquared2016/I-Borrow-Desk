@@ -9,7 +9,7 @@ from flask_admin.contrib.sqla import ModelView
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.exceptions import NotFound
 
-
+from .auth.email import EMAIL_CONFIRM_SALT
 from .extensions import login_manager, limiter, db
 from .models import User
 
@@ -103,7 +103,7 @@ def admin_logout():
 def confirm_email(token):
     ts = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
     try:
-        email = ts.loads(token, salt='email-confirm-key')
+        email = ts.loads(token, salt=EMAIL_CONFIRM_SALT)
     except:
         return 'Not Found', 404
 

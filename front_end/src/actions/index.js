@@ -306,7 +306,7 @@ export const submitFilter = (values, dispatch) => {
         ...error.response.data.errors
       });
     });
-}
+};
 
 export const fetchMostExpensive = () =>
   dispatch =>

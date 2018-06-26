@@ -1,7 +1,9 @@
-from flask import request, jsonify, Blueprint
+from flask import request, jsonify, Blueprint, current_app, abort
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
+from itsdangerous import URLSafeTimedSerializer
 
-from stock_loan.auth.email import send_confirmation
+from .auth.email import send_confirmation, send_reset_password_email, \
+    TOKEN_RESET_SALT
 from .extensions import db, stock_loan, mc
 from .models import User, get_user
 from .utils import historical_report_cache
@@ -184,3 +186,34 @@ def login():
             return jsonify({'msg': 'Email not yet confirmed - check your email'}), 401
     else:
         return jsonify({'msg': 'Bad username or password'}), 401
+
+
+@api_bp.route('/api/reset_password', methods=["POST"])
+def reset():
+    email = request.json.get('email')
+    user = User.query.filter_by(email=email).first_or_404()
+    send_reset_password_email(user)
+
+    return jsonify({'msg': 'Password reset token sent.'})
+
+
+ONE_HOUR = 60 * 60
+
+@api_bp.route('/api/reset_with_token', methods=["POST"])
+def reset_with_token():
+    token = request.json.get('token')
+    password = request.json.get('token')
+
+    ts = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    try:
+        email = ts.loads(token, salt=TOKEN_RESET_SALT, max_age=ONE_HOUR)
+    except:
+        abort(404)
+
+    user = User.query.filter_by(email=email).first_or_404()
+    user.set_password(password)
+
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify({'msg': 'Password reset complete.'})
