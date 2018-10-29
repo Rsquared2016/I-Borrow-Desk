@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
 import { Grid, Row, Col, Button, Input, FormGroup, ButtonToolbar, ControlLabel } from 'react-bootstrap';
 import { reduxForm, Field } from 'redux-form';
 

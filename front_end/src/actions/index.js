@@ -21,6 +21,7 @@ export const SHOW_LOGIN = 'SHOW_LOGIN';
 export const HIDE_LOGIN = 'HIDE_LOGIN';
 export const SHOW_PREFERENCES = 'SHOW_PREFERENCES';
 export const HIDE_PREFERENCES = 'HIDE_PREFERENCES';
+export const SHOW_FORGOT_PASSWORD = 'SHOW_FORGOT_PASSWORD';
 export const FETCH_PROFILE = 'FETCH_PROFILE';
 export const CLEAR_MESSAGE = 'CLEAR_MESSAGE';
 export const UPDATE_FILTER = 'UPDATE_FILTER';
@@ -170,6 +171,8 @@ export const hideLoginAction = () => ({'type': HIDE_LOGIN });
 
 export const showPreferencesAction = () => ({'type': SHOW_PREFERENCES });
 export const hidePreferencesAction = () => ({'type': HIDE_PREFERENCES });
+
+export const showForgotPasswordAction = () => ({'type': SHOW_FORGOT_PASSWORD });
 
 export const submitLogin = (values, dispatch) =>
   axios.post('/api/auth', values)

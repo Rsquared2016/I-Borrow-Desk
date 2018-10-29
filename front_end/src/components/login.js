@@ -1,43 +1,48 @@
-import React, {Component, PropTypes} from 'react';
-import {Modal, Button, FormGroup, HelpBlock} from 'react-bootstrap';
+import React from 'react';
+import {Button, FormGroup, HelpBlock} from 'react-bootstrap';
 import {reduxForm, Field} from 'redux-form';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import Modal from './common/modal';
 
 import utils from '../utils';
-import {hideLoginAction, submitLogin} from '../actions/index';
+import {hideLoginAction, submitLogin, showForgotPasswordAction} from '../actions/index';
 
-let Login = props => {
-  const { show, hideLoginAction, handleSubmit, error } = props;
+const _Login = ({
+  show,
+  hideLoginAction,
+  showForgotPasswordAction,
+  handleSubmit,
+  handleForgotPassword,
+  error,
+}) => {
   return (
-    <Modal show={show} onHide={hideLoginAction}>
-      <Modal.Header closeButton>
-        <Modal.Title>Login</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <form onSubmit={handleSubmit} name="login">
-         <FormGroup validationState={error ? 'error' : ''}>
-            <Field
-              name="username"
-              component={utils.renderField}
-              type="text"
-              label="Username"
-            />
-            <Field
-              name="password"
-              component={utils.renderField}
-              type="password"
-              label="Password"
-            />
-            <Button type="submit">
-              Submit
-            </Button>
-            <HelpBlock>
-              {error ? error : ''}
-            </HelpBlock>
-         </FormGroup>
-        </form>
-      </Modal.Body>
+    <Modal show={show} onHide={hideLoginAction} title="Login">
+      <form onSubmit={handleSubmit} name="login">
+        <FormGroup validationState={error && 'error'}>
+          <Field
+            name="username"
+            component={utils.renderField}
+            type="text"
+            label="Username"
+          />
+          <Field
+            name="password"
+            component={utils.renderField}
+            type="password"
+            label="Password"
+          />
+          <Button type="submit">
+            Submit
+          </Button>
+          <HelpBlock>
+            {error ? error : ''}
+          </HelpBlock>
+        </FormGroup>
+      </form>
+      <a href="#" onClick={showForgotPasswordAction}>
+        Forgot Password?
+      </a>
     </Modal>
   )
 };
@@ -51,15 +56,15 @@ function validate(values) {
 }
 
 const mapDispatchToProps = dispatch => ({
-  hideLoginAction: bindActionCreators(hideLoginAction, dispatch)
+  hideLoginAction: bindActionCreators(hideLoginAction, dispatch),
+  showForgotPasswordAction: bindActionCreators(showForgotPasswordAction, dispatch),
+
 });
 
-Login = reduxForm({
+const ReduxLogin = reduxForm({
   form: 'LoginForm',
   onSubmit: submitLogin,
   validate
-})(Login);
+})(_Login);
 
-Login = connect(null, mapDispatchToProps)(Login);
-//
-export default Login;
+export default connect(null, mapDispatchToProps)(ReduxLogin);

@@ -9,12 +9,12 @@ import  utils from '../utils';
 class HistoricalReport extends Component {
 
   componentWillMount() {
-    this.props.fetchStock(this.props.params.ticker);
+    this.props.fetchStock(this.props.match.params.ticker);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.params.ticker !== this.props.params.ticker) {
-      this.props.fetchStock(nextProps.params.ticker);
+    if (nextProps.match.params.ticker !== this.props.match.params.ticker) {
+      this.props.fetchStock(nextProps.match.params.ticker);
     }
   }
 

@@ -1,11 +1,13 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Grid, Row, Col, Alert } from 'react-bootstrap';
+import { clearMessage } from '../actions';
 
-export default class MessageBox extends Component {
+class MessageBox extends Component {
 
   componentDidMount() {
     // Automatically hide the message box after 5s
-    setTimeout(() => this.props.handleDismiss(), 5000);
+    setTimeout(() => this.props.clearMessage(), 5000);
   }
 
   render () {
@@ -32,7 +34,13 @@ export default class MessageBox extends Component {
   }
 }
 
-MessageBox.propTypes = {
-  message : PropTypes.object,
-  handleDismiss : PropTypes.func
-};
+// MessageBox.propTypes = {
+//   message : PropTypes.object,
+//   handleDismiss : PropTypes.func
+// };
+
+const mapStateToProps = state => ({
+  message: state.message,
+});
+
+export default connect(mapStateToProps, { clearMessage })(MessageBox);

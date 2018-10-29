@@ -1,8 +1,11 @@
 import { ReactGA } from '../analytics';
-
-import { UPDATE_LOCATION } from 'react-router-redux';
-
-import {  FETCH_STOCK, UPDATE_COMPANY_SEARCH, RESET_COMPANY_SEARCH, FETCH_TRENDING}
+import {
+  FETCH_STOCK,
+  UPDATE_COMPANY_SEARCH,
+  RESET_COMPANY_SEARCH,
+  FETCH_TRENDING,
+  SHOW_FORGOT_PASSWORD
+}
   from '../actions/index';
 import { LOGIN_SUCCESS, LOGOUT_ACTION, SHOW_LOGIN, HIDE_LOGIN, SHOW_PREFERENCES, HIDE_PREFERENCES }
   from '../actions/index';
@@ -42,7 +45,7 @@ export const TrendingReducer = (state={}, action) => {
 };
 
 export const AuthReducer =
-  (state={ authenticated: false, showLogin: false, username: '', id: '', receiveEmail: false,
+  (state={ authenticated: false, showLogin: false, showForgotPassword: false, username: '', id: '', receiveEmail: false,
     showPreferences: false}, action) => {
   switch(action.type) {
     case LOGIN_SUCCESS:
@@ -56,6 +59,10 @@ export const AuthReducer =
       ReactGA.set({userId: undefined });
       sessionStorage.removeItem('token');
       return {...state, authenticated: false, showLogin: true, username: '', id: ''};
+    case SHOW_FORGOT_PASSWORD:
+      ReactGA.set({userId: undefined });
+      sessionStorage.removeItem('token');
+      return {...state, authenticated: false, showLogin: false, showForgotPassword: true, username: '', id: ''};
     case FETCH_PROFILE:
       ReactGA.set({userId: action.payload.id });
       return {...state, username: action.payload.username, id: action.payload.id,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Glyphicon } from 'react-bootstrap';
-import { Component, PropTypes } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Stock from './stock';
@@ -87,14 +87,14 @@ class StockTable extends Component {
     );
   }
 }
-
-StockTable.propTypes = {
-  stocks: PropTypes.array,
-  watchlist: PropTypes.array,
-  showUpdated: PropTypes.bool,
-  addWatchlist: PropTypes.func,
-  removeWatchlist: PropTypes.func
-};
+//
+// StockTable.propTypes = {
+//   stocks: PropTypes.array,
+//   watchlist: PropTypes.array,
+//   showUpdated: PropTypes.bool,
+//   addWatchlist: PropTypes.func,
+//   removeWatchlist: PropTypes.func
+// };
 
 const mapStateToProps = ({ watchlist }) => { return { watchlist }; };
 

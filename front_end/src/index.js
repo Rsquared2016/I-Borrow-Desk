@@ -1,3 +1,5 @@
+import MessageBox from "./components/message-box";
+
 if (typeof window.Promise !== 'function') {
  require('es6-promise').polyfill();
 }
@@ -5,11 +7,15 @@ require("./css/style.css");
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Grid, Row, Col } from 'react-bootstrap';
 import { Provider } from 'react-redux';
 import { createStore, compose, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
-import { Router, Route, browserHistory } from 'react-router';
+import {
+  Router,
+  Route,
+} from 'react-router';
+import createBrowserHistory from 'history/createBrowserHistory';
 import { reducer as formReducer } from 'redux-form';
 
 import { ReactGA, analyticsMiddleware } from './analytics';
@@ -17,6 +23,9 @@ import { ReactGA, analyticsMiddleware } from './analytics';
 import { fetchProfile, fetchWatchlist } from './actions/index';
 
 import App from './components/app';
+import Popups from './components/popups';
+import Navbar from './components/nav-bar';
+import Footer from './components/footer';
 import Trending from './components/trending';
 import HistoricalReport from './components/historical-report';
 import Watchlist from './components/watchlist';
@@ -25,13 +34,13 @@ import FilterStocks from './components/filter-stocks';
 import About from './components/about';
 import ChangeLog from './components/changelog';
 
+
 import {StockReducer, CompanySearchReducer, TrendingReducer, WatchlistReducer,
   AuthReducer, MessageReducer, FilteredStocksReducer, MostExpensiveReducer }
   from './reducers/index';
 
 
 const reducer = combineReducers({
-  routing: routerReducer,
   stock: StockReducer,
   companies: CompanySearchReducer,
   trending: TrendingReducer,
@@ -51,7 +60,6 @@ const store = createStore(
     window.devToolsExtension ? window.devToolsExtension() : f => f
   )
 );
-const history = syncHistoryWithStore(browserHistory, store);
 
 
 if (store.getState().auth.authenticated) {
@@ -64,21 +72,27 @@ function logPageView() {
   ReactGA.pageview(window.location.pathname);
 }
 
-
 ReactDOM.render(
   <Provider store={store}>
-    <div>
-      <Router history={history} onUpdate={logPageView}>
-        <Route path='/' component={App}>
-          <Route path='report/:ticker' component={HistoricalReport} />
-          <Route path='trending' component={Trending} />
-          <Route path='watchlist' component={Watchlist} />
-          <Route path='register' component={Register} />
-          <Route path='filter' component={FilterStocks} />
-          <Route path='about' component={About} />
-          <Route path='changelog' component={ChangeLog} />
-        </Route>
-      </Router>
-    </div>
+    <Router history={createBrowserHistory()} onUpdate={logPageView}>
+      <Grid>
+        <Row>
+          <Col>
+            <Navbar />
+            <Popups />
+            <MessageBox />
+            <Route exact path='/' component={App} />
+            <Route path='/report/:ticker' component={HistoricalReport} />
+            <Route path='/trending' component={Trending} />
+            <Route path='/watchlist' component={Watchlist} />
+            <Route path='/register' component={Register} />
+            <Route path='/filter' component={FilterStocks} />
+            <Route path='/about' component={About} />
+            <Route path='/changelog' component={ChangeLog} />
+          </Col>
+        </Row>
+        <Footer />
+      </Grid>
+    </Router>
   </Provider>
   , document.querySelector('.container'));

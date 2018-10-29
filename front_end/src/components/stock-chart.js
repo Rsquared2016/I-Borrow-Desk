@@ -1,14 +1,26 @@
 import React, { Component } from 'react';
-import { ChartCanvas, Chart, EventCapture, series, axes, helper, coordinates, tooltip, scale } from 'react-stockcharts';
+import {
+  ChartCanvas,
+  Chart,
+  EventCapture,
+} from 'react-stockcharts';
+import {
+  BarSeries,
+  LineSeries,
+} from 'react-stockcharts/lib/series';
+import {
+  XAxis,
+  YAxis,
+} from 'react-stockcharts/lib/axes';
+import { fitWidth } from 'react-stockcharts/lib/helper';
+import {
+  CrossHairCursor,
+  MouseCoordinateX,
+} from 'react-stockcharts/lib/coordinates';
+import { SingleValueTooltip } from 'react-stockcharts/lib/tooltip';
+import { discontinuosTimeScaleProvider } from 'react-stockcharts/lib/scale';
 import d3 from 'd3';
 import { timeFormat } from "d3-time-format";
-
-const { BarSeries, LineSeries } = series;
-const { XAxis, YAxis} = axes;
-const { fitWidth } = helper;
-const { CrossHairCursor, MouseCoordinateX } = coordinates;
-const { SingleValueTooltip } = tooltip;
-const { discontinuousTimeScaleProvider } = scale;
 
 class StockChart extends Component {
   render() {
