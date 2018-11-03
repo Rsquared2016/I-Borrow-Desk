@@ -1,9 +1,7 @@
-import MessageBox from "./components/message-box";
-
 if (typeof window.Promise !== 'function') {
  require('es6-promise').polyfill();
 }
-require("./css/style.css");
+require('./css/style.css');
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -33,6 +31,8 @@ import Register from './components/register';
 import FilterStocks from './components/filter-stocks';
 import About from './components/about';
 import ChangeLog from './components/changelog';
+import MessageBox from './components/message-box';
+
 
 
 import {StockReducer, CompanySearchReducer, TrendingReducer, WatchlistReducer,
@@ -81,14 +81,14 @@ ReactDOM.render(
             <Navbar />
             <Popups />
             <MessageBox />
-            <Route exact path='/' component={App} />
-            <Route path='/report/:ticker' component={HistoricalReport} />
-            <Route path='/trending' component={Trending} />
-            <Route path='/watchlist' component={Watchlist} />
-            <Route path='/register' component={Register} />
-            <Route path='/filter' component={FilterStocks} />
-            <Route path='/about' component={About} />
-            <Route path='/changelog' component={ChangeLog} />
+            <Route exact path="/" component={App} />
+            <Route path="/report/:ticker" component={HistoricalReport} />
+            <Route path="/trending" component={Trending} />
+            <Route path="/watchlist" component={Watchlist} />
+            <Route path="/register" component={Register} />
+            <Route path="/filter" component={FilterStocks} />
+            <Route path="/about" component={About} />
+            <Route path="/changelog" component={ChangeLog} />
           </Col>
         </Row>
         <Footer />

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { SubmissionError, reset } from 'redux-form';
 
-import { store }  from '../index';
+import { store } from '../index';
 
 export const UPDATE_COMPANY_SEARCH = 'UPDATE_COMPANY_SEARCH';
 export const RESET_COMPANY_SEARCH = 'RESET_COMPANY_SEARCH';
@@ -22,6 +22,9 @@ export const HIDE_LOGIN = 'HIDE_LOGIN';
 export const SHOW_PREFERENCES = 'SHOW_PREFERENCES';
 export const HIDE_PREFERENCES = 'HIDE_PREFERENCES';
 export const SHOW_FORGOT_PASSWORD = 'SHOW_FORGOT_PASSWORD';
+export const HIDE_FORGOT_PASSWORD = 'HIDE_FORGOT_PASSWORD';
+export const RESET_PASSWORD = 'RESET_PASSWORD';
+export const RESET_PASSWORD_SUCCESS = 'RESET_PASSWORD_SUCCESS';
 export const FETCH_PROFILE = 'FETCH_PROFILE';
 export const CLEAR_MESSAGE = 'CLEAR_MESSAGE';
 export const UPDATE_FILTER = 'UPDATE_FILTER';
@@ -44,14 +47,14 @@ export const searchCompany = name => {
   };
 };
 
-export const resetCompanySearch = () =>  ({
+export const resetCompanySearch = () => ({
   type: RESET_COMPANY_SEARCH,
   meta: {
     analytics: {
       type: 'reset-company-search'
     }
   }
-})
+});
 
 export const fetchStock = ticker =>
   dispatch =>
@@ -67,7 +70,6 @@ export const fetchStock = ticker =>
         }
       }
       ));
-
 
 export const fetchTrending = () => {
   return dispatch => {
@@ -173,6 +175,14 @@ export const showPreferencesAction = () => ({'type': SHOW_PREFERENCES });
 export const hidePreferencesAction = () => ({'type': HIDE_PREFERENCES });
 
 export const showForgotPasswordAction = () => ({'type': SHOW_FORGOT_PASSWORD });
+export const hideForgotPasswordAction = () => ({'type': HIDE_FORGOT_PASSWORD });
+
+export const resetPassword = ({ email }, dispatch) =>
+  axios.post('/api/reset_password', { email })
+    .then(_response => {
+      dispatch(reset('ForgotPasswordForm'));
+      dispatch(RESET_PASSWORD_SUCCESS);
+    });
 
 export const submitLogin = (values, dispatch) =>
   axios.post('/api/auth', values)
@@ -187,7 +197,7 @@ export const submitLogin = (values, dispatch) =>
           }});
       dispatch(fetchProfile());
       dispatch(fetchWatchlist());
-      dispatch(reset('LoginForm'))
+      dispatch(reset('LoginForm'));
     })
     .catch(error => {
       throw new SubmissionError({ _error: error.response.data.msg });
@@ -213,7 +223,7 @@ export const toggleMorningEmail = () =>
 
 
 export const submitNewEmail = (values, dispatch) =>
-  makeAuthRequest().post(`/api/user/email`, values)
+  makeAuthRequest().post('/api/user/email', values)
     .then(response => {
       dispatch({
         type: CHANGE_EMAIL_SUCCESS,
@@ -234,10 +244,10 @@ export const submitNewEmail = (values, dispatch) =>
       } else {
         console.log('Unhandled error', error);
       }
-    })
+    });
 
 export const submitNewPassword = (values, dispatch) =>
-  makeAuthRequest().post(`/api/user/password`, values)
+  makeAuthRequest().post('/api/user/password', values)
     .then(response => {
       dispatch({
         type: CHANGE_PASSWORD_SUCCESS,

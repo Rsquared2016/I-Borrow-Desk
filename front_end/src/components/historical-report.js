@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import StockChart from './stock-chart';
 import { fetchStock, addWatchlist, removeWatchlist } from '../actions/index';
-import  utils from '../utils';
+import utils from '../utils';
 
 class HistoricalReport extends Component {
 
@@ -36,13 +36,13 @@ class HistoricalReport extends Component {
               (<tr key={el.time}>
                 <td>{utils.toPercentage(el.fee)}</td>
                 <td>{utils.toCommas(el.available)}</td>
-                <td>{el.time.replace("T", " ")}</td>
+                <td>{el.time.replace('T', ' ')}</td>
               </tr>)
             )}
           </tbody>
         </Table>
       </Col>
-    )
+    );
   }
 
   render() {
@@ -58,8 +58,8 @@ class HistoricalReport extends Component {
         </h2>
           <Button
             onClick={() => action(stock.symbol)}
-            bsStyle={contains ? "danger" : "success"}>
-            {contains ? "Remove from Watchlist" : "Add to Watchlist"}
+            bsStyle={contains ? 'danger' : 'success'}>
+            {contains ? 'Remove from Watchlist' : 'Add to Watchlist'}
           </Button>
         <StockChart
           data={data}
@@ -67,7 +67,7 @@ class HistoricalReport extends Component {
         />
         {stock.real_time && this.renderTable(stock.real_time)}
       </div>
-    )
+    );
   }
 }
 

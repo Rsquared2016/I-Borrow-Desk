@@ -6,10 +6,10 @@ const utils = {
 
   toPercentageNoScale: x => `${x.toFixed(1)}%`,
 
-  toCommas: x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+  toCommas: x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','),
 
   renderField: ({ input, label, type, meta: { touched, error, warning } }) =>
-    <FormGroup validationState={touched && error ? 'error' : 'success'}>
+    (<FormGroup validationState={touched && error ? 'error' : 'success'}>
       <ControlLabel>
         {label}
       </ControlLabel>
@@ -20,14 +20,14 @@ const utils = {
       <HelpBlock>
         {touched && error ? error : ''}
       </HelpBlock>
-    </FormGroup>,
+    </FormGroup>),
 
   renderCheckbox: ({ input, label }) =>
-    <FormGroup>
+    (<FormGroup>
       <Checkbox {...input}>
         {label}
       </Checkbox>
-    </FormGroup>,
+    </FormGroup>),
 };
 
 export default utils;

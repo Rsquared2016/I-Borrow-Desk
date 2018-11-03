@@ -9,7 +9,7 @@ class ChangeEmail extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {message: ''}
+    this.state = {message: ''};
   }
 
   render() {
@@ -41,7 +41,7 @@ class ChangeEmail extends Component {
           </Button>
         </form>
       </div>
-    )
+    );
   }
 }
 

@@ -98,7 +98,7 @@ const filter = props => {
         </Row>
       </form>
     </Grid>
-  )
+  );
 };
 
 

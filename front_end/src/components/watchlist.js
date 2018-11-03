@@ -29,10 +29,10 @@ class Watchlist extends Component {
           stocks={watchlist}
           showUpdated />
       </div>
-    )
+    );
   }
 }
 
 const mapStateToProps = ({ watchlist, auth }) => ({ watchlist, auth });
 
-export default connect(mapStateToProps,  { fetchWatchlist, toggleMorningEmail })(Watchlist);
+export default connect(mapStateToProps, { fetchWatchlist, toggleMorningEmail })(Watchlist);

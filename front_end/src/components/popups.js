@@ -5,18 +5,22 @@ import Preferences from './preferences';
 import ForgotPassword from './forgot-password';
 
 const Popups = ({
-  auth,
+  showLogin,
+  showPreferences,
+  showForgotPassword,
 }) => (
   <React.Fragment>
     <hr />
-    <Login show={auth.showLogin} />
-    <Preferences show={auth.showPreferences} />
-    <ForgotPassword show={auth.showForgotPassword} />
+    {showLogin && <Login />}
+    {showPreferences && <Preferences />}
+    {showForgotPassword && <ForgotPassword />}
   </React.Fragment>
 );
 
-const mapStateToProps = state => ({
-  auth: state.auth,
+const mapStateToProps = ({ auth }) => ({
+  showLogin: auth.showLogin,
+  showPreferences: auth.showPreferences,
+  showForgotPassword: auth.showForgotPassword,
 });
 
 export default connect(mapStateToProps)(Popups);

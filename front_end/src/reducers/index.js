@@ -4,7 +4,8 @@ import {
   UPDATE_COMPANY_SEARCH,
   RESET_COMPANY_SEARCH,
   FETCH_TRENDING,
-  SHOW_FORGOT_PASSWORD
+  SHOW_FORGOT_PASSWORD,
+  RESET_PASSWORD_SUCCESS,
 }
   from '../actions/index';
 import { LOGIN_SUCCESS, LOGOUT_ACTION, SHOW_LOGIN, HIDE_LOGIN, SHOW_PREFERENCES, HIDE_PREFERENCES }
@@ -74,7 +75,7 @@ export const AuthReducer =
     case SHOW_PREFERENCES:
       return {...state, showPreferences: true};
     default:
-      return state
+      return state;
   }
 };
 
@@ -85,13 +86,13 @@ export const WatchlistReducer = (state=[], action) => {
         return [...action.payload.data.watchlist];
       } else if (action.payload.data.hasOwnProperty('watchlist')) {
         return [];
-      } else {
+      } 
         return state;
-      }
+      
     case CLEAR_WATCHLIST:
       return [];
     default:
-      return state
+      return state;
   }
 };
 
@@ -109,6 +110,8 @@ export const MessageReducer = (state={text: '', type: ''}, action) => {
       return {text: 'Email successfully changed', type: 'success'};
     case CHANGE_PASSWORD_SUCCESS:
       return {text: 'Password successfully changed', type: 'success'};
+    case RESET_PASSWORD_SUCCESS:
+      return {text: 'A reset password link will be sent to the account associated with your email if it exists.', type: 'success'};
     case CLEAR_MESSAGE:
       return {text: '', type: ''};
     default:

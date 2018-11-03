@@ -9,16 +9,15 @@ import utils from '../utils';
 import {hideLoginAction, submitLogin, showForgotPasswordAction} from '../actions/index';
 
 const _Login = ({
-  show,
   hideLoginAction,
   showForgotPasswordAction,
-  handleSubmit,
+  onSubmit,
   handleForgotPassword,
   error,
 }) => {
   return (
-    <Modal show={show} onHide={hideLoginAction} title="Login">
-      <form onSubmit={handleSubmit} name="login">
+    <Modal show onHide={hideLoginAction} title="Login">
+      <form onSubmit={onSubmit} name="login">
         <FormGroup validationState={error && 'error'}>
           <Field
             name="username"
@@ -44,7 +43,7 @@ const _Login = ({
         Forgot Password?
       </a>
     </Modal>
-  )
+  );
 };
 
 

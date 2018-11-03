@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "lint": "eslint src/js/*.js",
+    "lint": "eslint src/**/*.js",
     "storybook": "start-storybook -p 9001 -c .storybook",
     "build": "webpack --watch --progress",
     "deploy": "webpack --config webpack.production.config.js"
@@ -26,6 +26,7 @@
     "css-loader": "^0.23.1",
     "d3": "^3.5.13",
     "es6-promise": "^3.0.2",
+    "eslint-plugin-react": "^7.11.1",
     "history": "^4.7.2",
     "jest": "^23.6.0",
     "react": "^16.6.0",

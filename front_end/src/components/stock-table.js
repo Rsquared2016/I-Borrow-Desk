@@ -38,15 +38,15 @@ class StockTable extends Component {
     return stocks.sort((a, b) => {
       let x = a[key];
       let y = b[key];
-      if (typeof x === "string") {
+      if (typeof x === 'string') {
           x = x.toLowerCase();
           y = y.toLowerCase();
       }
       if (asc) {
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-      } else {
+      } 
         return ((x < y) ? 1 : ((x > y) ? -1 : 0));
-      }
+      
     });
   }
 

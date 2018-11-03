@@ -38,8 +38,8 @@ class SearchBar extends Component {
       <Combobox
         data={companies}
         suggest={true}
-        valueField='symbol'
-        textField='name'
+        valueField="symbol"
+        textField="name"
         placeholder="Enter a ticker or search a company by name"
         value={this.state.ticker}
         onChange={this.onInputChange.bind(this)}

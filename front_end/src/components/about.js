@@ -45,7 +45,7 @@ export default () => {
           <p><strong>What is the ticker structure?</strong> I'm currently tracking Interactive Broker's worldwide database
           which includes: Australia, Austria, Belgium, UK, Canada, Netherlands, France, Germany, Hong Kong, India, Italy,
               Japan, Mexico, Spain, Sweden, Switzerland, and the USA. US tickers do not have a suffix, while all other
-          countries do (in the form: <Link to='report/ABX.CA'>ABX.CA</Link>
+          countries do (in the form: <Link to="report/ABX.CA">ABX.CA</Link>
               - Barrick Gold) I have tried to match country codes based on <a href="http://risk101.com/reference/Techdoc-Bloomberg_country_codes.pdf">
               Bloomberg's</a> methodology. Let me know
           if you spot any errors.</p>
@@ -59,4 +59,4 @@ export default () => {
       </Row>
     </Grid>
   );
-}
+};

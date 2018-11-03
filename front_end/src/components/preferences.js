@@ -10,7 +10,7 @@ class Preferences extends Component {
 
   render() {
     return (
-      <Modal show={this.props.show} onHide={this.props.hidePreferencesAction} >
+      <Modal show onHide={this.props.hidePreferencesAction} >
         <Modal.Header closeButton>
           <Modal.Title>Preferences</Modal.Title>
         </Modal.Header>
@@ -19,7 +19,7 @@ class Preferences extends Component {
           <ChangePassword />
         </Modal.Body>
       </Modal>
-    )
+    );
   }
 }
 

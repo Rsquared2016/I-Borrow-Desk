@@ -19,7 +19,7 @@ class MessageBox extends Component {
             <Col md={6} xs={12} mdOffset={3}>
               <Alert
                 bsStyle={message.type}
-                closeLabel='Close'
+                closeLabel="Close"
                 onDismiss={this.props.handleDismiss}>
                 {message.text}
               </Alert>
@@ -28,9 +28,9 @@ class MessageBox extends Component {
         </Grid>
       );
     }
-    else {
-      return <div></div>;
-    }
+    
+      return <div />;
+    
   }
 }
 

@@ -30,29 +30,29 @@ const _Navbar = ({
     <Navbar>
       <Navbar.Header>
         <Navbar.Brand>
-          <Link to='/'>IBorrowDesk</Link>
+          <Link to="/">IBorrowDesk</Link>
         </Navbar.Brand>
         <Navbar.Toggle />
       </Navbar.Header>
       <Navbar.Collapse>
         <Nav>
-          <LinkContainer to='/trending'>
+          <LinkContainer to="/trending">
             <NavItem>Trending</NavItem>
           </LinkContainer>
-          <LinkContainer to='/filter'>
+          <LinkContainer to="/filter">
             <NavItem>Filter</NavItem>
           </LinkContainer>
-          <LinkContainer to='/about'>
+          <LinkContainer to="/about">
             <NavItem>About</NavItem>
           </LinkContainer>
-          <LinkContainer to='/changelog'>
+          <LinkContainer to="/changelog">
             <NavItem>Changes</NavItem>
           </LinkContainer>
           <NavItem href="https://twitter.com/IBorrowDesk">
             @IBorrowDesk
           </NavItem>
           {authenticated &&
-          <LinkContainer to='watchlist'>
+          <LinkContainer to="watchlist">
             <NavItem>Watchlist</NavItem>
           </LinkContainer>}
         </Nav>
@@ -67,7 +67,7 @@ const _Navbar = ({
             </MenuItem>
           </NavDropdown>}
           {!authenticated &&
-          <LinkContainer to='/register'>
+          <LinkContainer to="/register">
             <NavItem>Register</NavItem>
           </LinkContainer>}
           {!authenticated &&

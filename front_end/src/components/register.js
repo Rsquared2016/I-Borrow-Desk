@@ -41,8 +41,8 @@ class Register extends Component {
               />
               <Field
                 name="receiveEmail"
-                type='checkbox'
-                label='Receive Morning Email'
+                type="checkbox"
+                label="Receive Morning Email"
                 component={utils.renderCheckbox}
                 checked
               />
