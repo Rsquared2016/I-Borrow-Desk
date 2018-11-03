@@ -1,9 +1,4 @@
-import React from 'react';
-import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
-import ForgotPassword from '../components/forgot-password';
+import { addDecorator } from '@storybook/react';
+import { Provider } from './provider.decorator';
 
-storiesOf('ForgotPassword', module)
-  .add('normal', () => (
-    <ForgotPassword />
-  ));
+addDecorator(Provider);
