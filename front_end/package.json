@@ -28,7 +28,6 @@
     "es6-promise": "^3.0.2",
     "eslint-plugin-react": "^7.11.1",
     "history": "^4.7.2",
-    "jest": "^23.6.0",
     "react": "^16.6.0",
     "react-bootstrap": "^0.32.4 ",
     "react-d3": "^0.4.0",

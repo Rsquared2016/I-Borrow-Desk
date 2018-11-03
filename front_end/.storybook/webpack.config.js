@@ -7,9 +7,5 @@ module.exports = (baseConfig, env, defaultConfig) => {
       'analyticsDebug': true
     }),
   );
-  // defaultConfig.loaders.push({
-  //   test: /\.css$/,
-  //   loader: 'style-loader!css-loader'
-  // });
   return defaultConfig;
 };
