@@ -50,7 +50,6 @@ class HistoricalReport extends Component {
     if (!stock.name) return <div>Loading...</div>;
     const contains = this.props.watchlist && this.props.watchlist.some(el => stock.symbol === el.symbol);
     const action = contains ? this.props.removeWatchlist : this.props.addWatchlist;
-    const data = stock.daily;
     return (
       <div>
         <h2>
@@ -62,7 +61,7 @@ class HistoricalReport extends Component {
             {contains ? 'Remove from Watchlist' : 'Add to Watchlist'}
           </Button>
         <StockChart
-          data={data}
+          historicalData={stock.daily}
           daily={true}
         />
         {stock.real_time && this.renderTable(stock.real_time)}
