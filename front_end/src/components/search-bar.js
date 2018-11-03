@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Combobox } from 'react-widgets';
 import _ from 'lodash';
-import { browserHistory } from 'react-router';
+import { compose } from 'recompose';
+import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { searchCompany, resetCompanySearch } from '../actions/index';
 
@@ -28,12 +29,15 @@ class SearchBar extends Component {
     const ticker = value.symbol;
     this.setState({ ticker: '' });
     this.props.resetCompanySearch();
-    browserHistory.push(`/report/${ticker}`);
+    this.props.history.push(`/report/${ticker}`);
   }
 
   render() {
     const companies = this.props.companySearch
-      .map(el => ({'symbol': el.symbol, 'name': `${el.name} - ${el.symbol}`}));
+      .map(el => ({
+        symbol: el.symbol,
+        name: `${el.name} - ${el.symbol}`,
+      }));
     return (
       <Combobox
         data={companies}
@@ -50,11 +54,13 @@ class SearchBar extends Component {
 }
 
 const mapStateToProps = state => ({ companySearch: state.companies });
-
 const mapDispatchToProps = dispatch =>
   ({
     searchCompany: bindActionCreators(searchCompany, dispatch),
     resetCompanySearch: bindActionCreators(resetCompanySearch, dispatch),
   });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  withRouter,
+)(SearchBar);
