@@ -30,6 +30,10 @@ module.exports = {
         exclude: [node_modules_dir],
         include: path.join(__dirname, 'src')
       },
+      {
+        test: /\.(gif|ttf|eot|svg|woff2?)$/,
+        use: 'url-loader',
+      },
     ]
   }
 };

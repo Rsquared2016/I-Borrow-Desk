@@ -31,14 +31,21 @@ module.exports = {
 
   ],
   module: {
-    loaders: [{
-      test: /\.css$/,
-      loaders: ['style-loader', 'css-loader']
-    }, {
-      test: /\.js$/,
-      loaders: ['babel-loader'],
-      exclude: [node_modules_dir],
-      include: path.join(__dirname, 'src')
-    }]
+    loaders: [
+      {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader'
+      },
+      {
+        test: /\.(gif|ttf|eot|svg|woff2?)$/,
+        use: 'url-loader',
+      },
+      {
+        test: /\.js$/,
+        loaders: ['babel-loader'],
+        exclude: [node_modules_dir],
+        include: path.join(__dirname, 'src')
+      },
+    ]
   }
 };

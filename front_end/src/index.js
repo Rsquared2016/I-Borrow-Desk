@@ -1,7 +1,8 @@
 if (typeof window.Promise !== 'function') {
  require('es6-promise').polyfill();
 }
-require('./css/style.css');
+import 'react-widgets/dist/css/react-widgets.css';
+import './css/style.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
