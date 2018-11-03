@@ -1,4 +1,5 @@
-from flask import request, jsonify, Blueprint, current_app, abort
+import time
+from flask import request, jsonify, Blueprint, current_app
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from itsdangerous import URLSafeTimedSerializer
 
@@ -191,24 +192,28 @@ def login():
 @api_bp.route('/api/reset_password', methods=["POST"])
 def reset():
     email = request.json.get('email')
-    user = User.query.filter_by(email=email).first_or_404()
-    send_reset_password_email(user)
+    user = User.query.filter_by(email=email).first()
+    if user:
+        send_reset_password_email(user)
+    else:
+        time.sleep(5)
 
     return jsonify({'msg': 'Password reset token sent.'})
 
 
 ONE_HOUR = 60 * 60
 
-@api_bp.route('/api/reset_with_token', methods=["POST"])
+@api_bp.route('/api/change_password_with_token', methods=["POST"])
 def reset_with_token():
     token = request.json.get('token')
-    password = request.json.get('token')
+    password = request.json.get('password')
 
     ts = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
     try:
         email = ts.loads(token, salt=TOKEN_RESET_SALT, max_age=ONE_HOUR)
     except:
-        abort(404)
+        time.sleep(1)
+        return jsonify({'msg': 'Password change complete.'})
 
     user = User.query.filter_by(email=email).first_or_404()
     user.set_password(password)
@@ -216,4 +221,4 @@ def reset_with_token():
     db.session.add(user)
     db.session.commit()
 
-    return jsonify({'msg': 'Password reset complete.'})
+    return jsonify({'msg': 'Password change complete.'})

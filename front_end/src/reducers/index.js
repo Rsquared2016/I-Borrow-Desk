@@ -5,20 +5,27 @@ import {
   RESET_COMPANY_SEARCH,
   FETCH_TRENDING,
   SHOW_FORGOT_PASSWORD,
-  RESET_PASSWORD_SUCCESS,
   HIDE_FORGOT_PASSWORD,
+  RESET_PASSWORD_SUCCESS,
   LOGIN_SUCCESS,
   LOGOUT_ACTION,
   SHOW_LOGIN,
   HIDE_LOGIN,
   SHOW_PREFERENCES,
   HIDE_PREFERENCES,
+  CHANGE_PASSWORD_WITH_TOKEN_SUCCESS,
+  REGISTER_SUCCESS,
+  FETCH_PROFILE,
+  FETCH_WATCHLIST,
+  ADD_WATCHLIST,
+  REMOVE_WATCHLIST,
+  CLEAR_WATCHLIST,
+  CLEAR_MESSAGE,
+  UPDATE_FILTER,
+  UPDATE_MOST_EXPENSIVE,
+  CHANGE_EMAIL_SUCCESS,
+  CHANGE_PASSWORD_SUCCESS,
 } from '../actions/index';
-import { REGISTER_SUCCESS, FETCH_PROFILE } from '../actions/index';
-import { FETCH_WATCHLIST, ADD_WATCHLIST, REMOVE_WATCHLIST, CLEAR_WATCHLIST } from '../actions/index';
-import { CLEAR_MESSAGE } from '../actions/index';
-import { UPDATE_FILTER, UPDATE_MOST_EXPENSIVE } from '../actions/index';
-import { CHANGE_EMAIL_SUCCESS, CHANGE_PASSWORD_SUCCESS } from '../actions/index';
 
 
 export const StockReducer = (state={}, action) => {
@@ -70,6 +77,10 @@ export const AuthReducer =
       return {...state, authenticated: false, showLogin: false, showForgotPassword: true, username: '', id: ''};
     case HIDE_FORGOT_PASSWORD:
       return {...state, showForgotPassword: false};
+    case RESET_PASSWORD_SUCCESS:
+      return { ...state, showForgotPassword: false, showChangePasswordWithToken: true };
+    case CHANGE_PASSWORD_WITH_TOKEN_SUCCESS:
+      return { ...state, showChangePasswordWithToken: false };
     case FETCH_PROFILE:
       ReactGA.set({userId: action.payload.id });
       return {...state, username: action.payload.username, id: action.payload.id,

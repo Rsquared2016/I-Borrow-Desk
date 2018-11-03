@@ -21,8 +21,10 @@ export const SHOW_PREFERENCES = 'SHOW_PREFERENCES';
 export const HIDE_PREFERENCES = 'HIDE_PREFERENCES';
 export const SHOW_FORGOT_PASSWORD = 'SHOW_FORGOT_PASSWORD';
 export const HIDE_FORGOT_PASSWORD = 'HIDE_FORGOT_PASSWORD';
-export const RESET_PASSWORD = 'RESET_PASSWORD';
 export const RESET_PASSWORD_SUCCESS = 'RESET_PASSWORD_SUCCESS';
+export const SHOW_CHANGE_PASSWORD_WITH_TOKEN = 'SHOW_RESET_WITH_TOKEN';
+export const HIDE_CHANGE_PASSWORD_WITH_TOKEN = 'SHOW_RESET_WITH_TOKEN';
+export const CHANGE_PASSWORD_WITH_TOKEN_SUCCESS = 'RESET_WITH_TOKEN_SUCCESS';
 export const FETCH_PROFILE = 'FETCH_PROFILE';
 export const CLEAR_MESSAGE = 'CLEAR_MESSAGE';
 export const UPDATE_FILTER = 'UPDATE_FILTER';
@@ -166,20 +168,31 @@ export const removeWatchlist = symbol =>
       .catch(err => dispatch({type: SHOW_LOGIN, payload: err}));
 
 
-export const showLoginAction = () => ({'type': SHOW_LOGIN });
-export const hideLoginAction = () => ({'type': HIDE_LOGIN });
+export const showLoginAction = () => ({type: SHOW_LOGIN });
+export const hideLoginAction = () => ({type: HIDE_LOGIN });
 
-export const showPreferencesAction = () => ({'type': SHOW_PREFERENCES });
-export const hidePreferencesAction = () => ({'type': HIDE_PREFERENCES });
+export const showPreferencesAction = () => ({type: SHOW_PREFERENCES });
+export const hidePreferencesAction = () => ({type: HIDE_PREFERENCES });
 
-export const showForgotPasswordAction = () => ({'type': SHOW_FORGOT_PASSWORD });
-export const hideForgotPasswordAction = () => ({'type': HIDE_FORGOT_PASSWORD });
+export const showForgotPasswordAction = () => ({type: SHOW_FORGOT_PASSWORD });
+export const hideForgotPasswordAction = () => ({type: HIDE_FORGOT_PASSWORD });
+
+export const hideChangePasswordWithTokenAction = () => ({type: HIDE_CHANGE_PASSWORD_WITH_TOKEN });
 
 export const resetPassword = ({ email }, dispatch) =>
   axios.post('/api/reset_password', { email })
     .then(_response => {
       dispatch(reset('ForgotPasswordForm'));
-      dispatch(RESET_PASSWORD_SUCCESS);
+      dispatch({ type: RESET_PASSWORD_SUCCESS });
+      dispatch({ type: SHOW_CHANGE_PASSWORD_WITH_TOKEN });
+    });
+
+export const changePasswordWithToken = ({ password, token }, dispatch) =>
+  axios.post('/api/change_password_with_token', { password, token })
+    .then(_response => {
+      dispatch(reset('ChangePasswordWithTokenForm'));
+      dispatch({ type: CHANGE_PASSWORD_WITH_TOKEN_SUCCESS });
+      dispatch({ type: SHOW_LOGIN });
     });
 
 export const submitLogin = (values, dispatch) =>
@@ -294,7 +307,7 @@ export const submitRegister = (values, dispatch) =>
     });
 
 
-export const clearMessage = () => ({'type': CLEAR_MESSAGE});
+export const clearMessage = () => ({ type: CLEAR_MESSAGE });
 
 
 export const submitFilter = (values, dispatch) => {
