@@ -95,7 +95,7 @@ const makeAuthRequest = () => {
 };
 
 export const fetchWatchlist = () => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     return makeAuthRequest().get('/api/watchlist')
       .then(response => {
         dispatch({
@@ -114,7 +114,7 @@ export const fetchWatchlist = () => {
 };
 
 export const addWatchlist = symbol => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     return makeAuthRequest().post('/api/watchlist', { symbol })
       .then(response => {
         dispatch({
@@ -142,7 +142,7 @@ export const addWatchlist = symbol => {
 };
 
 export const removeWatchlist = symbol =>
-  (dispatch, getState) =>
+  (dispatch) =>
     makeAuthRequest().delete(`/api/watchlist?symbol=${symbol}`)
       .then(response => {
         dispatch({
@@ -247,7 +247,7 @@ export const submitNewEmail = (values, dispatch) =>
       dispatch({type: HIDE_PREFERENCES });
     })
     .catch(error => {
-      if (error.response.status == 401) {
+      if (error.response.status === 401) {
         throw new SubmissionError({
           _error: 'Password Incorrect Failed',
           password: 'Password Incorrect'
@@ -270,7 +270,7 @@ export const submitNewPassword = (values, dispatch) =>
       dispatch({type: HIDE_PREFERENCES });
     })
     .catch(error => {
-      if (error.response.status == 401) {
+      if (error.response.status === 401) {
         throw new SubmissionError({
           _error: 'Password Incorrect',
           password: 'Password incorrect'

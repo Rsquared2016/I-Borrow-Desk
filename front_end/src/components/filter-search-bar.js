@@ -1,6 +1,17 @@
 import React from 'react';
-import { Grid, Row, Col, Button, Input, FormGroup, ButtonToolbar, ControlLabel } from 'react-bootstrap';
-import { reduxForm, Field } from 'redux-form';
+import {
+  Grid,
+  Row,
+  Col,
+  Button,
+  FormGroup,
+  ButtonToolbar,
+  ControlLabel,
+} from 'react-bootstrap';
+import {
+  reduxForm,
+  Field,
+} from 'redux-form';
 
 import { submitFilter } from '../actions/index';
 import utils from '../utils';

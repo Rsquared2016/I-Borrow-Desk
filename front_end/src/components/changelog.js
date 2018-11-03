@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Row, Col, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Row, Col, ListGroup, ListGroupItem } from 'react-bootstrap';
 
 export default () => {
   return (
