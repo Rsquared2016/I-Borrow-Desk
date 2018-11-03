@@ -6,10 +6,14 @@ import {
   FETCH_TRENDING,
   SHOW_FORGOT_PASSWORD,
   RESET_PASSWORD_SUCCESS,
-}
-  from '../actions/index';
-import { LOGIN_SUCCESS, LOGOUT_ACTION, SHOW_LOGIN, HIDE_LOGIN, SHOW_PREFERENCES, HIDE_PREFERENCES }
-  from '../actions/index';
+  HIDE_FORGOT_PASSWORD,
+  LOGIN_SUCCESS,
+  LOGOUT_ACTION,
+  SHOW_LOGIN,
+  HIDE_LOGIN,
+  SHOW_PREFERENCES,
+  HIDE_PREFERENCES,
+} from '../actions/index';
 import { REGISTER_SUCCESS, FETCH_PROFILE } from '../actions/index';
 import { FETCH_WATCHLIST, ADD_WATCHLIST, REMOVE_WATCHLIST, CLEAR_WATCHLIST } from '../actions/index';
 import { CLEAR_MESSAGE } from '../actions/index';
@@ -64,6 +68,8 @@ export const AuthReducer =
       ReactGA.set({userId: undefined });
       sessionStorage.removeItem('token');
       return {...state, authenticated: false, showLogin: false, showForgotPassword: true, username: '', id: ''};
+    case HIDE_FORGOT_PASSWORD:
+      return {...state, showForgotPassword: false};
     case FETCH_PROFILE:
       ReactGA.set({userId: action.payload.id });
       return {...state, username: action.payload.username, id: action.payload.id,

@@ -8,7 +8,7 @@ const utils = {
 
   toCommas: x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','),
 
-  renderField: ({ input, label, type, meta: { touched, error, warning } }) =>
+  renderField: ({ input, label, type, meta: { touched, error } }) =>
     (<FormGroup validationState={touched && error ? 'error' : 'success'}>
       <ControlLabel>
         {label}

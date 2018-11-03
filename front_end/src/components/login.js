@@ -11,13 +11,12 @@ import {hideLoginAction, submitLogin, showForgotPasswordAction} from '../actions
 const _Login = ({
   hideLoginAction,
   showForgotPasswordAction,
-  onSubmit,
-  handleForgotPassword,
+  handleSubmit,
   error,
 }) => {
   return (
     <Modal show onHide={hideLoginAction} title="Login">
-      <form onSubmit={onSubmit} name="login">
+      <form onSubmit={handleSubmit} name="login">
         <FormGroup validationState={error && 'error'}>
           <Field
             name="username"
@@ -57,7 +56,6 @@ function validate(values) {
 const mapDispatchToProps = dispatch => ({
   hideLoginAction: bindActionCreators(hideLoginAction, dispatch),
   showForgotPasswordAction: bindActionCreators(showForgotPasswordAction, dispatch),
-
 });
 
 const ReduxLogin = reduxForm({

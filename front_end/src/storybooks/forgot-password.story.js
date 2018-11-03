@@ -15,5 +15,6 @@ storiesOf('ForgotPassword', module)
   .add('normal', () => (
     <ReduxForgotPassword
       dispatchHideForgotPassword={action('dispatchHideForgotPassword')}
+      handleSubmit={(e) => { e.preventDefault(); action('handleSubmit')(); }}
     />
   ));

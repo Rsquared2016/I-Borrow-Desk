@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { SubmissionError, reset } from 'redux-form';
 
-import { store } from '../index';
-
 export const UPDATE_COMPANY_SEARCH = 'UPDATE_COMPANY_SEARCH';
 export const RESET_COMPANY_SEARCH = 'RESET_COMPANY_SEARCH';
 export const FETCH_STOCK = 'FETCH_STOCK';
