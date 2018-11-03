@@ -60,10 +60,10 @@ class HistoricalReport extends Component {
             bsStyle={contains ? 'danger' : 'success'}>
             {contains ? 'Remove from Watchlist' : 'Add to Watchlist'}
           </Button>
-        <StockChart
+        {stock.daily && <StockChart
           historicalData={stock.daily}
           daily={true}
-        />
+        />}
         {stock.real_time && this.renderTable(stock.real_time)}
       </div>
     );
