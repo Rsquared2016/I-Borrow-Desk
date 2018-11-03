@@ -50,7 +50,14 @@ class UserView(ModelView):
             raise NotFound
 
     column_list = (
-        'username', 'email', 'receive_email', 'admin', 'views', 'last_login', 'watchlist',
+        'username',
+        'email',
+        'receive_email',
+        'admin',
+        'views',
+        'last_login',
+        'watchlist',
+        'confirmed_at',
     )
 
 @login_manager.user_loader

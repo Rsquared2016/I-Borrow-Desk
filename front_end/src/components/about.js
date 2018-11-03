@@ -24,7 +24,7 @@ export default () => {
             React</a> and <a href="http://redux.js.org/">Redux</a>.</p>
           <p>Speaking of Twitter bots, <a href="https://twitter.com/IBorrowDesk">@IBorrowDesk </a>
              has access to this database. Tweet a ticker symbol at it and it will tweet back its fee and availability!</p>
-          <p>You can reach me at <mail to="cameron.mochrie@gmail.com">cameron.mochrie@gmail.com</mail>.
+          <p>You can reach me at cameron.mochrie@gmail.com.
             The source for I Borrow Desk is available at <a href="https://github.com/cjmochrie/I-Borrow-Desk">
               GitHub</a>.</p>
 
