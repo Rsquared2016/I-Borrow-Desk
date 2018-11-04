@@ -2,8 +2,6 @@ import os
 from fabric.api import *
 from fabric.contrib.project import rsync_project
 
-
-env.hosts = ['iborrowdesk.com']
 env.use_ssh_config = True
 VIRTUALENV = '/home/cameron/.pyenv/versions/iborrowdesk/bin/activate'
 SCRIPT_DIRECTORY = os.path.join(os.path.abspath('..'), 'front_end')
@@ -14,6 +12,7 @@ REMOTE_DIRECTORY = '/var/www/iborrowdesk.com/static/'
 REPO = 'git@github.com:cjmochrie/I-Borrow-Desk.git'
 
 def deploy():
+    build_frontend()
     with settings(warn_only=True):
         if run("test -d %s" % REMOTE_CODE_DIRECTORY).failed:
             run("git clone {} {}".format(REPO, REMOTE_CODE_DIRECTORY))
@@ -24,14 +23,12 @@ def deploy():
             with shell_env(**REQUIRED_ENVS):
                 run('flask db upgrade')
 
-    build_frontend()
     copy_static()
     sudo("service iborrowdesk restart")
     sudo("service iborrowdesk.manager restart")
-    sudo("service iborrowdesk.twitter restart")
+    if not any('staging' in host for host in env.hosts):
+        sudo("service iborrowdesk.twitter restart")
     cleanup_local_dist()
-    cleanup_local_dist()
-
 
 def build_frontend(script_directory=SCRIPT_DIRECTORY, webapp_directory=WEBAPP_DIRECTORY):
     with lcd(webapp_directory):
