@@ -19,6 +19,7 @@ def deploy():
     with cd(REMOTE_CODE_DIRECTORY):
         run("git pull {}".format(REPO))
         with prefix('source {}'.format(VIRTUALENV)):
+            run('pip install --upgrade pip')
             run('pip install -r requirements/prod.txt')
             with shell_env(**REQUIRED_ENVS):
                 run('flask db upgrade')
