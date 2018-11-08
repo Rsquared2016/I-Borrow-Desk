@@ -12,9 +12,9 @@ from sentry_sdk.integrations.flask import FlaskIntegration
 from .borrow import Borrow
 
 sentry_sdk.init(
-    dsn=os.getenv('SENTRY_KEY').strip(),
+    dsn=os.getenv('SENTRY_KEY'),
     integrations=[FlaskIntegration()],
-    environment=os.getenv('APP_ENV').strip(),
+    environment=os.getenv('APP_ENV'),
 )
 db = SQLAlchemy()
 limiter = Limiter(key_func=get_ipaddr)
