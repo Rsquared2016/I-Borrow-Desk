@@ -1,9 +1,12 @@
+import io
+import csv
 import time
 from flask import (
     Blueprint,
     current_app,
     jsonify,
     request,
+    send_file,
 )
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from itsdangerous import URLSafeTimedSerializer
@@ -239,3 +242,29 @@ def reset_with_token():
     db.session.commit()
 
     return jsonify({'msg': 'Password change complete.'})
+
+
+@api_bp.route('/api/ticker/csv/<symbol>', methods=['GET'])
+def csv_historical_report(symbol):
+    daily = historical_report_cache(symbol=symbol, real_time=False)
+    with io.StringIO() as f:
+        writer = csv.DictWriter(
+            f,
+            delimiter=',',
+            quotechar='|',
+            quoting=csv.QUOTE_MINIMAL,
+            fieldnames=['fee', 'available', 'time'],
+        )
+        writer.writeheader()
+        for row in daily:
+            print("row", row)
+            writer.writerow(row)
+
+    # Creating the byteIO object from the StringIO Object
+        mem = io.BytesIO(f.getvalue().encode('utf-8'))
+        mem.seek(0)
+        return send_file(
+            mem,
+            attachment_filename=f"{symbol}.csv",
+            as_attachment=True,
+        )

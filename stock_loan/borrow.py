@@ -151,7 +151,6 @@ class Borrow:
         date = rows[0][1].replace('.', '-')
         time = rows[0][2]
         datetime = ' '.join((date, time))
-        print(datetime)
 
         # Check to make sure the file hasn't already been scraped and added to the database
         if datetime == self._timestamps[country]:
@@ -165,9 +164,6 @@ class Borrow:
 
         db, cursor = self._connect()
         errors_caught = 0
-
-        print(filename)
-        print(country)
 
         if country in COUNTRY_CODE:
             suffix = COUNTRY_CODE[country]

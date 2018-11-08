@@ -46,7 +46,7 @@ class HistoricalReport extends Component {
   }
 
   render() {
-    const { stock } = this.props;
+    const { stock, subscribed } = this.props;
     if (!stock.name) return <div>Loading...</div>;
     const contains = this.props.watchlist && this.props.watchlist.some(el => stock.symbol === el.symbol);
     const action = contains ? this.props.removeWatchlist : this.props.addWatchlist;
@@ -55,11 +55,17 @@ class HistoricalReport extends Component {
         <h2>
           {stock.name} - {stock.symbol}
         </h2>
-          <Button
-            onClick={() => action(stock.symbol)}
-            bsStyle={contains ? 'danger' : 'success'}>
-            {contains ? 'Remove from Watchlist' : 'Add to Watchlist'}
-          </Button>
+        <Button
+          onClick={() => action(stock.symbol)}
+          bsStyle={contains ? 'danger' : 'success'}>
+          {contains ? 'Remove from Watchlist' : 'Add to Watchlist'}
+        </Button>
+        {
+          subscribed &&
+          <a style={{margin: '20px'}} href={`/api/ticker/csv/${stock.symbol}`}>
+            CSV Export
+          </a>
+        }
         {stock.daily && <StockChart
           historicalData={stock.daily}
           daily={true}
@@ -70,7 +76,21 @@ class HistoricalReport extends Component {
   }
 }
 
-const mapStateToProps = ({ stock, watchlist }) => ({ stock, watchlist });
+const mapStateToProps = ({
+  stock,
+  watchlist,
+  auth,
+}) => ({
+  stock,
+  watchlist,
+  subscribed: auth.subscribed,
+});
 
-export default connect(mapStateToProps, { fetchStock, addWatchlist, removeWatchlist })
-(HistoricalReport);
+export default connect(
+  mapStateToProps,
+  {
+    fetchStock,
+    addWatchlist,
+    removeWatchlist,
+  },
+)(HistoricalReport);

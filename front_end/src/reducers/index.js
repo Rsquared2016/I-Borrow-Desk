@@ -83,8 +83,13 @@ export const AuthReducer =
       return { ...state, showChangePasswordWithToken: false };
     case FETCH_PROFILE:
       ReactGA.set({userId: action.payload.id });
-      return {...state, username: action.payload.username, id: action.payload.id,
-        receiveEmail: action.payload.receiveEmail};
+      return {
+        ...state,
+        username: action.payload.username,
+        id: action.payload.id,
+        subscribed: action.payload.subscribed,
+        receiveEmail: action.payload.receiveEmail,
+      };
     case HIDE_LOGIN:
       return {...state, showLogin: false};
     case HIDE_PREFERENCES:
