@@ -6,6 +6,18 @@ export default () => {
     <Row>
       <Col xs={12} md={8} mdOffset={2}>
         <ListGroup>
+          <ListGroupItem>
+            <p>
+              Nov 8, 2018 - Launched a <a href="https://www.patreon.com/iborrowdesk">Patreon</a>!
+            </p>
+            <p>
+              Huge overhaul of the site's infrastructure. Added several new ease of life features:
+              forgot password, email confirmation, login by email etc.
+            </p>
+            <p>
+              Launched the first "Premium" feature (there will be more): CSV exports of historical data.
+            </p>
+          </ListGroupItem>
           <ListGroupItem>Jan 2, 2016 - Upgrade a bunch of front-end dependencies. Resolve a visual bug with n/a Fee</ListGroupItem>
           <ListGroupItem>February 14, 2016 - New URL! www.iborrowdesk.com</ListGroupItem>
           <ListGroupItem>February, 2016 - New Features: Universal search box, better charting
