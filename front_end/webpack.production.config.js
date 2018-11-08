@@ -19,7 +19,7 @@ module.exports = {
       'process.env.NODE_ENV': '"production"',
       'analyticsID': "'UA-65249305-1'",
       'analyticsDebug': false,
-      'appEnv': 'production',
+      'appEnv': "'production'",
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
