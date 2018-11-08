@@ -48,8 +48,11 @@ const _Navbar = ({
           <LinkContainer to="/changelog">
             <NavItem>Changes</NavItem>
           </LinkContainer>
-          <NavItem href="https://twitter.com/IBorrowDesk">
+          <NavItem href="https://twitter.com/IBorrowDesk" target="_blank">
             @IBorrowDesk
+          </NavItem>
+          <NavItem href="https://www.patreon.com/iborrowdesk" target="_blank">
+            Patreon
           </NavItem>
           {authenticated &&
           <LinkContainer to="watchlist">
