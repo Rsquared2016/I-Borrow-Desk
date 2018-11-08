@@ -1,6 +1,13 @@
 if (typeof window.Promise !== 'function') {
  require('es6-promise').polyfill();
 }
+
+import * as Sentry from '@sentry/browser';
+Sentry.init({
+  dsn: 'https://eed5ac909da74e94819e9a42fb6055f5@sentry.io/1319143',
+  environment: appEnv,
+});
+
 import 'react-widgets/dist/css/react-widgets.css';
 import './css/style.css';
 

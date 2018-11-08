@@ -14,7 +14,8 @@ module.exports = {
   plugins:[
     new webpack.DefinePlugin({
       'analyticsID': "'UA-89959687-1'",
-      'analyticsDebug': true
+      'analyticsDebug': true,
+      'appEnv': "'development'",
     })
   ],
 
