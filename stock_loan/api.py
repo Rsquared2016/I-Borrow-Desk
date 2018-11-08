@@ -20,7 +20,12 @@ from .auth.email import (
     send_reset_password_email,
     TOKEN_RESET_SALT,
 )
-from .extensions import db, stock_loan, mc
+from .extensions import (
+    db,
+    stock_loan,
+    mc,
+    limiter,
+)
 from .models import User, get_user
 from .utils import historical_report_cache
 
@@ -194,6 +199,7 @@ def most_expensive():
     return jsonify(results=summary)
 
 
+@limiter.limit("10 per hour")
 @api_bp.route('/api/auth', methods=['POST'])
 def login():
     username = request.json.get('username')
@@ -211,6 +217,7 @@ def login():
         return jsonify({'msg': 'Bad username or password'}), 401
 
 
+@limiter.limit("10 per hour")
 @api_bp.route('/api/reset_password', methods=["POST"])
 def reset():
     email = request.json.get('email')
@@ -225,6 +232,7 @@ def reset():
 
 ONE_HOUR = 60 * 60
 
+@limiter.limit("10 per hour")
 @api_bp.route('/api/change_password_with_token', methods=["POST"])
 def reset_with_token():
     token = request.json.get('token')
