@@ -198,7 +198,9 @@ def most_expensive():
 def login():
     username = request.json.get('username')
     password = request.json.get('password')
-    user = User.query.filter_by(username=username).one_or_none()
+    user = User.query \
+        .filter((User.username == username) | (User.email == username)) \
+        .one_or_none()
     if user and user.check_password(password):
         if user.confirmed_at:
             ret = {'access_token': create_access_token(identity=user)}

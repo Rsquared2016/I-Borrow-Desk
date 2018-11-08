@@ -1,14 +1,25 @@
 import React from 'react';
-import {Button, FormGroup, HelpBlock} from 'react-bootstrap';
-import {reduxForm, Field} from 'redux-form';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import {
+  Button,
+  FormGroup,
+  HelpBlock,
+} from 'react-bootstrap';
+import {
+  reduxForm,
+  Field,
+} from 'redux-form';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import Modal from './common/modal';
 
 import utils from '../utils';
-import {hideLoginAction, submitLogin, showForgotPasswordAction} from '../actions/index';
+import {
+  hideLoginAction,
+  submitLogin,
+  showForgotPasswordAction,
+} from '../actions/index';
 
-const _Login = ({
+export const _Login = ({
   hideLoginAction,
   showForgotPasswordAction,
   handleSubmit,
@@ -22,7 +33,7 @@ const _Login = ({
             name="username"
             component={utils.renderField}
             type="text"
-            label="Username"
+            label="Username or email address"
           />
           <Field
             name="password"
@@ -48,7 +59,7 @@ const _Login = ({
 
 function validate(values) {
   let errors = {};
-  if (!values.username) errors.username = 'Username required';
+  if (!values.username) errors.username = 'Username or email address required';
   if (!values.password) errors.password = 'Password required';
   return errors;
 }
