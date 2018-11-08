@@ -254,6 +254,7 @@ def reset_with_token():
 
 
 @api_bp.route('/api/ticker/csv/<symbol>', methods=['GET'])
+@jwt_required
 @require_subscription
 def csv_historical_report(symbol):
     daily = historical_report_cache(symbol=symbol, real_time=False)
