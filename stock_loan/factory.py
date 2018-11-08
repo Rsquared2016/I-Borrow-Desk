@@ -39,14 +39,17 @@ def create_app(debug=False, refresh_stock_loan=True):
     admin = Admin(name='IBorrowDesk', template_mode='bootstrap3')
     admin.init_app(app)
 
-    from .routes import AdminView, UserView, templated_bp
+    from .routes import templated_bp
+    from .admin_routes import SubscriptionView
+    from .admin_routes import UserView
+    from .admin_routes import AdminView
     admin.add_view(AdminView(name='Home'))
     app.register_blueprint(templated_bp)
 
     from .api import api_bp
     app.register_blueprint(api_bp)
 
-    from .models import User
+    from .models import User, Subscription
     jwt_manager.init_app(app)
 
     @jwt_manager.user_identity_loader
@@ -54,6 +57,7 @@ def create_app(debug=False, refresh_stock_loan=True):
         return user.username
 
     admin.add_view(UserView(User, db.session))
+    admin.add_view(SubscriptionView(Subscription, db.session))
 
     limiter.init_app(app)
     limiter.logger.addHandler(StreamHandler())
