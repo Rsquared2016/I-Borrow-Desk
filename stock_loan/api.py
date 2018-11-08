@@ -75,7 +75,6 @@ def json_trending():
 @api_bp.route('/api/watchlist', methods=['GET', 'POST', 'DELETE'])
 @jwt_required
 @user_loader
-@require_subscription
 def watchlist(*, user):
     """Watchlist endpoint"""
     if request.method == 'POST':
@@ -255,6 +254,7 @@ def reset_with_token():
 
 
 @api_bp.route('/api/ticker/csv/<symbol>', methods=['GET'])
+@require_subscription
 def csv_historical_report(symbol):
     daily = historical_report_cache(symbol=symbol, real_time=False)
     with io.StringIO() as f:
