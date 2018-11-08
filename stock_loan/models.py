@@ -1,3 +1,4 @@
+import enum
 from sqlalchemy.sql.functions import now
 from werkzeug import generate_password_hash, check_password_hash
 
@@ -60,6 +61,11 @@ class User(db.Model):
     def increment_views(self):
         self.views += 1
 
+    @property
+    def subscribed(self):
+        return any(subscription.expired_at is None for subscription in self.subscriptions)
+
+
     def __repr__(self):
         return '{}'.format(self.username)
 
@@ -71,3 +77,19 @@ def get_user(username):
     db.session.add(user)
     db.session.commit()
     return user
+
+
+class SubscriptionEnum(enum.Enum):
+    patreon_standard = 1
+    patreon_premium = 1
+
+
+class Subscription(db.Model):
+    __tablename__ = 'subscriptions'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user = db.relationship('User', backref=db.backref('subscriptions', lazy=True))
+    package = db.Column(db.Enum(SubscriptionEnum), nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), server_default=now())
+    updated_at = db.Column(db.DateTime(timezone=True), onupdate=now())
+    expired_at = db.Column(db.DateTime(timezone=True))

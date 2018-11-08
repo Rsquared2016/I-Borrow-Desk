@@ -1,10 +1,22 @@
 import time
-from flask import request, jsonify, Blueprint, current_app
+from flask import (
+    Blueprint,
+    current_app,
+    jsonify,
+    request,
+)
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from itsdangerous import URLSafeTimedSerializer
 
-from .auth.email import send_confirmation, send_reset_password_email, \
-    TOKEN_RESET_SALT
+from .route_helpers import (
+    user_loader,
+    require_subscription,
+)
+from .auth.email import (
+    send_confirmation,
+    send_reset_password_email,
+    TOKEN_RESET_SALT,
+)
 from .extensions import db, stock_loan, mc
 from .models import User, get_user
 from .utils import historical_report_cache
@@ -54,9 +66,10 @@ def json_trending():
 
 @api_bp.route('/api/watchlist', methods=['GET', 'POST', 'DELETE'])
 @jwt_required
-def watchlist():
+@user_loader
+@require_subscription
+def watchlist(*, user):
     """Watchlist endpoint"""
-    user = get_user(get_jwt_identity())
     if request.method == 'POST':
         symbol = request.get_json()['symbol']
         stock_loan.insert_watchlist(user.id, [symbol])
@@ -101,9 +114,9 @@ def register():
 
 @api_bp.route('/api/user/email', methods=['POST'])
 @jwt_required
-def change_email():
+@user_loader
+def change_email(*, user):
     """Change email endpoint"""
-    user = get_user(get_jwt_identity())
     data = request.get_json()
     if not user.check_password(data['password']):
         return jsonify(errors= {'password': 'Invalid password'}), 401
@@ -118,9 +131,9 @@ def change_email():
 
 @api_bp.route('/api/user/morning', methods=['POST'])
 @jwt_required
-def change_morning_email():
+@user_loader
+def change_morning_email(*, user):
     """Change email endpoint"""
-    user = get_user(get_jwt_identity())
     user.receive_email = not user.receive_email
     db.session.add(user)
     db.session.commit()
@@ -146,11 +159,15 @@ def change_password():
 
 @api_bp.route('/api/user', methods=['GET'])
 @jwt_required
-def get_profile():
+@user_loader
+def get_profile(*, user):
     """Get username"""
-    user = get_user(get_jwt_identity())
-    return jsonify(
-        {'username': user.username, 'id': user.id, 'receiveEmail': user.receive_email})
+    return jsonify({
+        'username': user.username,
+        'id': user.id,
+        'receiveEmail': user.receive_email,
+        'subscribed': user.subscribed,
+    })
 
 
 @api_bp.route('/api/filter', methods=['GET'])
