@@ -450,7 +450,7 @@ class Borrow:
             return []
 
     @timer
-    def historical_report(self, symbol, real_time=False):
+    def historical_report(self, symbol, real_time=False, full_history=False):
         """Return historical report of fee, availability for a given symbol  along with the Company name
         The default interval is daily (9:30AM for the opening of the market) - if real-time flag is set to True
         the last 100 entries will be returned - about 3 days of data."""
@@ -469,9 +469,11 @@ class Borrow:
                   'ORDER BY datetime;'
 
         else:
+            time_limit = '' if full_history \
+                else 'AND WHERE borrow.datetime > now() - interval \'1year\''
             SQL = 'SELECT fee, available, cast(datetime as date) as date ' \
                   'FROM stocks JOIN Borrow ON (stocks.cusip = Borrow.cusip) ' \
-                  'WHERE symbol = %s ' \
+                  f'WHERE symbol = %s {time_limit}' \
                   'AND cast(datetime as time) between \'9:30\' and \'9:40\' ' \
                   'ORDER BY datetime;'
 

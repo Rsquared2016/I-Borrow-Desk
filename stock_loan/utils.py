@@ -6,14 +6,15 @@ from .models import User
 from .email_update import send_emails
 
 
-def historical_report_cache(*, symbol, real_time):
+def historical_report_cache(*, symbol, real_time, full_history=False):
     """Return the historical report for a given
     symbol and real_time flag. Takes care of memcache"""
-    key_summary = str(symbol + str(real_time))
+    key_summary = str(symbol + str(real_time) + str(full_history))
     summary = mc.get(key_summary)
 
     if not summary:
-        summary = stock_loan.historical_report(symbol, real_time)
+        summary = stock_loan.historical_report(
+            symbol, real_time=real_time, full_history=full_history)
         if summary:
             mc.set(key_summary, summary)
 

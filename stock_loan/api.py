@@ -269,7 +269,7 @@ def csv_historical_report(token):
         time.sleep(1)
         raise abort(404)
 
-    daily = historical_report_cache(symbol=symbol, real_time=False)
+    daily = historical_report_cache(symbol=symbol, real_time=False, full_history=True)
     with io.StringIO() as f:
         writer = csv.DictWriter(
             f,
