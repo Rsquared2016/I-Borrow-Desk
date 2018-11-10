@@ -7,14 +7,20 @@ from flask import (
     jsonify,
     request,
     send_file,
+    abort,
 )
-from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
+from flask_jwt_extended import (
+    jwt_required,
+    jwt_optional,
+    get_jwt_identity,
+    create_access_token,
+)
 from itsdangerous import URLSafeTimedSerializer
 
+from .serializers import historical_report_serializer
 from .route_helpers import (
     user_loader,
-    require_subscription,
-)
+    CSV_TOKEN_SALT)
 from .auth.email import (
     send_confirmation,
     send_reset_password_email,
@@ -34,13 +40,11 @@ api_bp = Blueprint('api_bp', __name__, template_folder='templates')
 
 
 @api_bp.route('/api/ticker/<symbol>', methods=['GET'])
-def json_historical_report(symbol):
+@jwt_optional
+@user_loader
+def json_historical_report(symbol, *, user):
     """Handler to deliver historical report in JSON format"""
-    real_time = historical_report_cache(symbol=symbol, real_time=True)
-    daily = historical_report_cache(symbol=symbol, real_time=False)
-    name = stock_loan.get_company_name(symbol)
-
-    return jsonify(real_time=real_time, daily=daily, symbol=symbol, name=name)
+    return historical_report_serializer(symbol=symbol, user=user)
 
 
 @api_bp.route('/api/search/<query>', methods=['GET'])
@@ -253,11 +257,19 @@ def reset_with_token():
     return jsonify({'msg': 'Password change complete.'})
 
 
-@api_bp.route('/api/ticker/csv/<symbol>', methods=['GET'])
-@jwt_required
-@require_subscription
-def csv_historical_report(symbol):
-    daily = historical_report_cache(symbol=symbol, real_time=False)
+FIVE_MINUTES = 5 * 60
+
+@api_bp.route('/api/ticker/csv/<token>', methods=['GET'])
+def csv_historical_report(token):
+    ts = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    try:
+        symbol = ts.loads(token, salt=CSV_TOKEN_SALT, max_age=FIVE_MINUTES)
+    except Exception as e:
+        print(e)
+        time.sleep(1)
+        raise abort(404)
+
+    daily = historical_report_cache(symbol=symbol, real_time=True)
     with io.StringIO() as f:
         writer = csv.DictWriter(
             f,

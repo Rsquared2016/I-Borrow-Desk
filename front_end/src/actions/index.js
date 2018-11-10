@@ -58,7 +58,7 @@ export const resetCompanySearch = () => ({
 
 export const fetchStock = ticker =>
   dispatch =>
-    axios.get(`/api/ticker/${ticker}`)
+    makeOptionalAuthRequest().get(`/api/ticker/${ticker}`)
       .then(response => dispatch({
         type: FETCH_STOCK,
         payload: response,
@@ -87,11 +87,17 @@ export const fetchTrending = () => {
   };
 };
 
+const _authRequest = token =>
+  axios.create({ headers: {'Authorization': `Bearer ${token}`} });
+
+const makeOptionalAuthRequest = () => {
+  const token = sessionStorage.token;
+  return token ? _authRequest(token) : axios.create();
+};
+
 const makeAuthRequest = () => {
   const token = sessionStorage.token;
-  return axios.create({
-    headers: {'Authorization': `Bearer ${token}`}
-  });
+  return _authRequest(token);
 };
 
 export const fetchWatchlist = () => {

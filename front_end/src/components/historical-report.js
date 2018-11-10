@@ -60,9 +60,8 @@ class HistoricalReport extends Component {
           bsStyle={contains ? 'danger' : 'success'}>
           {contains ? 'Remove from Watchlist' : 'Add to Watchlist'}
         </Button>
-        {
-          subscribed &&
-          <a style={{margin: '20px'}} href={`/api/ticker/csv/${stock.symbol}`}>
+        {stock.csv &&
+          <a style={{margin: '20px'}} href={stock.csv}>
             CSV Export
           </a>
         }
