@@ -14,9 +14,8 @@ def historical_report_serializer(*, symbol, user):
     }
     if user and user.subscribed:
         results['csv'] = csv_download_link(symbol)
-        results['daily']: historical_report_cache(
+        results['daily'] =historical_report_cache(
             symbol=symbol, real_time=False, full_history=True)
     else:
-        results['daily']: historical_report_cache(symbol=symbol, real_time=False)
-
+        results['daily'] =historical_report_cache(symbol=symbol, real_time=False)
     return jsonify(**results)

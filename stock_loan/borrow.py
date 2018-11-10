@@ -470,7 +470,7 @@ class Borrow:
 
         else:
             time_limit = '' if full_history \
-                else 'AND WHERE borrow.datetime > now() - interval \'1year\''
+                else 'AND borrow.datetime > now() - interval \'1year\''
             SQL = 'SELECT fee, available, cast(datetime as date) as date ' \
                   'FROM stocks JOIN Borrow ON (stocks.cusip = Borrow.cusip) ' \
                   f'WHERE symbol = %s {time_limit}' \
