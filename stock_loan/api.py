@@ -276,7 +276,7 @@ def csv_historical_report(token):
             delimiter=',',
             quotechar='|',
             quoting=csv.QUOTE_MINIMAL,
-            fieldnames=['fee', 'available', 'time'],
+            fieldnames=['date', 'available', 'fee'],
         )
         writer.writeheader()
         for row in daily:
