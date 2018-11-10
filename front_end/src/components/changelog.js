@@ -17,6 +17,9 @@ export default () => {
             <p>
               Launched the first "Premium" feature (there will be more): CSV exports of historical data.
             </p>
+            <p>
+              Removed access for non-subscriber users to all-time data. Will be limited to 1 year.
+            </p>
           </ListGroupItem>
           <ListGroupItem>Jan 2, 2016 - Upgrade a bunch of front-end dependencies. Resolve a visual bug with n/a Fee</ListGroupItem>
           <ListGroupItem>February 14, 2016 - New URL! www.iborrowdesk.com</ListGroupItem>

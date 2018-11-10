@@ -46,7 +46,7 @@ class HistoricalReport extends Component {
   }
 
   render() {
-    const { stock, subscribed } = this.props;
+    const { stock } = this.props;
     if (!stock.name) return <div>Loading...</div>;
     const contains = this.props.watchlist && this.props.watchlist.some(el => stock.symbol === el.symbol);
     const action = contains ? this.props.removeWatchlist : this.props.addWatchlist;
